@@ -53,4 +53,19 @@ public static void WriteToFile(String data, String location) {
      System.out.println(ex);
     }
 }
+public static ArrayList<Integer> teamMatchScore(String teamkey, String matches) {
+	ArrayList<Integer> scores = new ArrayList<Integer>();
+	JSONArray arr = new JSONArray(matches);
+	for(int i = 0;i<arr.length();i++) {
+		for(int ie = 0;ie<3;ie++) {
+		if(arr.getJSONObject(i).getJSONObject("alliances").getJSONObject("red").getJSONArray("team_keys").getString(ie).equals(teamkey)) {
+			scores.add(arr.getJSONObject(i).getJSONObject("alliances").getJSONObject("red").getInt("score"));
+		}
+		if(arr.getJSONObject(i).getJSONObject("alliances").getJSONObject("blue").getJSONArray("team_keys").getString(ie).equals(teamkey)) {
+			scores.add(arr.getJSONObject(i).getJSONObject("alliances").getJSONObject("blue").getInt("score"));
+		}
+		}
+	}
+	return scores;
+}
 }
