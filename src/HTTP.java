@@ -24,4 +24,12 @@ public class HTTP {
         in.close();
         return result.toString();
     }
+	public static String getTeamKeys(String eventkey) throws Exception {
+		return APIRead("event/"+eventkey+"/teams/keys");
+		
+	}
+	public static String matches(String teamkey) throws Exception {
+		return APIRead("team/"+teamkey+"/matches/"+Run.year);
+		
+	}
 }
