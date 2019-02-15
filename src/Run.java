@@ -14,9 +14,14 @@ public class Run {
 	public static String year = "2018";
 	public static String event = "azfl";
 	public static void main(String[] args) throws Exception {
-		DeepNetwork.GenerateNet(2, 1, 5, 2);
+		DeepNetwork.GenerateNet(2, 1, 4, 1);
 		
 		DeepNetwork.Train(100, 0.01, "/Users/logan42474/Desktop/testtext.csv", 2, 1, false);
+		
+		System.out.println(DeepNetwork.calculate(new double[] {0,0}));
+		System.out.println(DeepNetwork.calculate(new double[] {0,1}));
+		System.out.println(DeepNetwork.calculate(new double[] {1,0}));
+		System.out.println(DeepNetwork.calculate(new double[] {1,1}));
 		/*
 		teamkeys=JSON_Parsing.teamkeys(HTTP.getTeamKeys(year+event));
 		System.out.println(teamkeys);

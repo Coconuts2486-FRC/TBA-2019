@@ -1,6 +1,7 @@
 package Artaficial_Intelligence;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -10,7 +11,9 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
@@ -19,6 +22,14 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer.Builder;
 
 public class DeepNetwork {
 public static MultiLayerNetwork net;
+public static INDArray calculate(double[] input){
+	INDArray in = Nd4j.zeros(1, DeepNetwork.net.layerInputSize(0));
+	for(int i = 0;i<input.length;i++) {
+		in.putScalar(new int[]{0, i},input[i]);
+	}
+	
+	return net.output(in);
+}
 public static void Train(int trainingItterations, Double minimalError, String filePath, int inputs, int outputs, boolean hasHeader) throws FileNotFoundException {
 	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, inputs, outputs, hasHeader);
 	net.setListeners(new ScoreIterationListener(10));
@@ -26,7 +37,7 @@ public static void Train(int trainingItterations, Double minimalError, String fi
 		for(int i = 0; i<trainingItterations; i++) {
 			net.fit(ds);
 		}
-	}if(minimalError>0.0){
+	}else{
 		net.fit(ds);
 		while(net.score()>=minimalError) {
 			net.fit(ds);
@@ -62,6 +73,7 @@ public static void GenerateNet(int numberOfInputs, int numberOfOutputs, int numb
 	 OutputLayerBuilder.activation(Activation.SIGMOID);
 	 OutputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 	 listBuilder.layer(numberOfHiddenLayers+1, OutputLayerBuilder.build());
+	 listBuilder.backprop(true);
 	 
 	 MultiLayerConfiguration configure = listBuilder.build();
      MultiLayerNetwork neto = new MultiLayerNetwork(configure);
