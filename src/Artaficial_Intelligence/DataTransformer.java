@@ -5,7 +5,28 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
+
 public class DataTransformer {
+	public static DataSet ArrayListToDataSet(String filePath, int inputs, int outputs,boolean hasHeader) throws FileNotFoundException {
+		ArrayList<ExampleStructure> data = CSVtoArrayList(filePath, inputs, outputs, hasHeader);
+		INDArray input = Nd4j.zeros(data.size(), inputs);
+		System.out.println(data.size()+"   "+inputs);
+		INDArray labels = Nd4j.zeros(data.size(), outputs);
+		
+		for(int i = 0; i<data.size();i++) {
+			for(int ie = 0;ie<inputs;ie++) {
+				input.putScalar(new int[]{i, ie}, data.get(i).inputs.get(ie));
+			}
+			for(int ie = 0;ie<outputs;ie++) {
+				labels.putScalar(new int[]{i, ie}, data.get(i).outputs.get(ie));
+			}
+		}
+		DataSet ds = new DataSet(input,labels);
+		return ds;
+	}
 	public static ArrayList<ExampleStructure> CSVtoArrayList(String filePath, int inputs, int outputs,boolean hasHeader) throws FileNotFoundException {
 		File file = new File(filePath); 
 		@SuppressWarnings("resource")
@@ -29,10 +50,12 @@ public class DataTransformer {
 			items=layers.get(i).split(",");
 			if(inputs+outputs == items.length) {
 			for(int ie = 0; ie<inputs;ie++) {
-				exam.inputs.add(Double.parseDouble(items[ie]));
+				Double a = Double.parseDouble(items[ie]);
+				exam.inputs.add(a);
 			}
 			for(int iee = items.length-outputs; iee<items.length;iee++) {
-				exam.outputs.add(Double.parseDouble(items[iee]));
+				Double b = Double.parseDouble(items[iee]);
+				exam.outputs.add(b);
 			}
 			}else {
 				System.out.println("Error: The inputs and outputs do not add up to total enteries");

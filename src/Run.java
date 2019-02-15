@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Artaficial_Intelligence.DeepNetwork;
+
 public class Run {
 	//2019azfl Flagstaff
 	//2019cave Ventura
@@ -12,6 +14,10 @@ public class Run {
 	public static String year = "2018";
 	public static String event = "azfl";
 	public static void main(String[] args) throws Exception {
+		DeepNetwork.GenerateNet(2, 1, 5, 2);
+		
+		DeepNetwork.Train(100, 0.01, "/Users/logan42474/Desktop/testtext.csv", 2, 1, false);
+		/*
 		teamkeys=JSON_Parsing.teamkeys(HTTP.getTeamKeys(year+event));
 		System.out.println(teamkeys);
 		for(int i = 0; i<teamkeys.size();i++) {
@@ -27,7 +33,7 @@ public class Run {
 		System.out.println(scores.toString());
 		JSON_Parsing.WriteToFile(teammatchdata.toString(), "/Users/logan42474/Desktop/AllMatchData.txt");
 		JSON_Parsing.WriteToFile(scores.toString(), "/Users/logan42474/Desktop/MatchScores.txt");
-		
+		*/
 	}
 
 }

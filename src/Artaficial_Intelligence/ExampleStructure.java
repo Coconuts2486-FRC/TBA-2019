@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ExampleStructure {
 
-	public ArrayList<Double> inputs;
-	public ArrayList<Double> outputs;
+	public ArrayList<Double> inputs= new ArrayList<Double>();
+	public ArrayList<Double> outputs= new ArrayList<Double>();
 
 }
