@@ -27,12 +27,11 @@ public static INDArray calculate(double[] input){
 	for(int i = 0;i<input.length;i++) {
 		in.putScalar(new int[]{0, i},input[i]);
 	}
-	
 	return net.output(in);
 }
 public static void Train(int trainingItterations, Double minimalError, String filePath, int inputs, int outputs, boolean hasHeader) throws FileNotFoundException {
 	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, inputs, outputs, hasHeader);
-	net.setListeners(new ScoreIterationListener(10));
+	net.setListeners(new ScoreIterationListener(500));
 	if(minimalError==null) {
 		for(int i = 0; i<trainingItterations; i++) {
 			net.fit(ds);
@@ -44,7 +43,7 @@ public static void Train(int trainingItterations, Double minimalError, String fi
 		}
 	}
 }
-public static void GenerateNet(int numberOfInputs, int numberOfOutputs, int numberOfHiddenNodes, int numberOfHiddenLayers) {
+public static void GenerateClassificationNet(int numberOfInputs, int numberOfOutputs, int numberOfHiddenNodes, int numberOfHiddenLayers) {
 	NeuralNetConfiguration.Builder builder = new NeuralNetConfiguration.Builder();
 	builder.updater(new Sgd(0.1));
 	builder.seed(2486);
@@ -53,8 +52,8 @@ public static void GenerateNet(int numberOfInputs, int numberOfOutputs, int numb
 	 DenseLayer.Builder InputLayerBuilder = new DenseLayer.Builder();
 	 InputLayerBuilder.nIn(numberOfInputs);
 	 InputLayerBuilder.nOut(numberOfHiddenNodes);
-	 InputLayerBuilder.activation(Activation.SIGMOID);
-	 InputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
+	 InputLayerBuilder.activation(Activation.LEAKYRELU);
+	 InputLayerBuilder.weightInit(WeightInit.XAVIER);
 	 
 	 listBuilder.layer(0, InputLayerBuilder.build());
 	 
@@ -63,7 +62,7 @@ public static void GenerateNet(int numberOfInputs, int numberOfOutputs, int numb
 		 HiddenLayerBuilder.nIn(numberOfHiddenNodes);
 		 HiddenLayerBuilder.nOut(numberOfHiddenNodes);
 		 HiddenLayerBuilder.activation(Activation.SIGMOID);
-		 HiddenLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
+		 HiddenLayerBuilder.weightInit(WeightInit.XAVIER);
 		 listBuilder.layer(i, HiddenLayerBuilder.build());
 	 }
 	 
@@ -71,7 +70,7 @@ public static void GenerateNet(int numberOfInputs, int numberOfOutputs, int numb
 	 OutputLayerBuilder.nIn(numberOfHiddenNodes);
 	 OutputLayerBuilder.nOut(numberOfOutputs);
 	 OutputLayerBuilder.activation(Activation.SIGMOID);
-	 OutputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
+	 OutputLayerBuilder.weightInit(WeightInit.XAVIER);
 	 listBuilder.layer(numberOfHiddenLayers+1, OutputLayerBuilder.build());
 	 listBuilder.backprop(true);
 	 
