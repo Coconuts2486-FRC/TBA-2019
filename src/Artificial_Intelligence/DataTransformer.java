@@ -1,4 +1,4 @@
-package Artaficial_Intelligence;
+package Artificial_Intelligence;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,11 +9,13 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
+import Data.ExampleStructure;
+
 public class DataTransformer {
 	public static DataSet ArrayListToDataSet(String filePath, int inputs, int outputs,boolean hasHeader) throws FileNotFoundException {
 		ArrayList<ExampleStructure> data = CSVtoArrayList(filePath, inputs, outputs, hasHeader);
 		INDArray input = Nd4j.zeros(data.size(), inputs);
-		System.out.println(data.size()+"   "+inputs);
+		//System.out.println(data.size()+"   "+inputs);
 		INDArray labels = Nd4j.zeros(data.size(), outputs);
 		
 		for(int i = 0; i<data.size();i++) {
