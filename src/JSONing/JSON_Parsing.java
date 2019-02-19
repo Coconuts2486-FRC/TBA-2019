@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class JSON_Parsing {
+
 	/*
 public static void AdverageScore(String input) {
 	double all = 0;

@@ -51,6 +51,10 @@ public class HTTP {
 		return APIRead("team/"+teamkey+"/matches/"+GameData.year);
 		
 	}
+	public static String events() throws Exception {
+		return APIRead("events/"+GameData.year);
+		
+	}
 	
 	
 }

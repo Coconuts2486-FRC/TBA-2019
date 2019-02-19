@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import CSV.CSVWriter;
 import Data.GameData;
 import Internet.HTTP;
 import JSONing.JSONGenerators;
@@ -13,13 +17,23 @@ public class Run {
 	public static void main(String[] args) throws Exception {
 		
 		//DeepNetworkAbilities.GenerateClassificationNet(40, 40, 50, 2);
-		
+		//JSON_Parsing.WriteToFile(HTTP.events(), "/Users/logan42474/Desktop/aaaaaaaaaaaaa.txt");
 		
 		
 		GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
 		//System.out.print(HTTP.getTeamKeys(GameData.year+GameData.event));
-		System.out.println(GameData.teamkeys);
-		//JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData().toString(), "/Users/logan42474/Desktop/testarraything.txt");
+		GameData.setMatchData();
+		CSVWriter.WriteGameData("/Users/logan42474/Desktop/Testthing.csv");
+		
+		
+		
+		/*
+		//System.out.println(GameData.matchdata.get(GameData.teamkeys.get(0)).get(0).blueData.score);
+		for(int i = 0;i<GameData.teamkeys.size();i++) {
+			
+		}
+		JSON_Parsing.WriteToFile(new GsonBuilder().setPrettyPrinting().create().toJson(GameData.matchdata).toString(), "/Users/logan42474/Desktop/Match Data.txt");
+		
 		
 		
 		
