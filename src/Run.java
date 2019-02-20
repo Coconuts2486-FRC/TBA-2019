@@ -23,6 +23,7 @@ public class Run {
 		GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
 		//System.out.print(HTTP.getTeamKeys(GameData.year+GameData.event));
 		GameData.setMatchData();
+		JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), "/Users/logan42474/Desktop/Match Data.txt");
 		CSVWriter.WriteGameData("/Users/logan42474/Desktop/Testthing.csv");
 		
 		
