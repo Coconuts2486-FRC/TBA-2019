@@ -1,6 +1,7 @@
 package Artificial_Intelligence;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -8,6 +9,7 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -20,6 +22,14 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer.Builder;
 
 public class DeepNetworkAbilities {
 public static MultiLayerNetwork net;
+public static void saveModel(String filepath) throws IOException {
+        ModelSerializer.writeModel(net, filepath, true);
+}
+public static void loadModel(String filepath) throws IOException {
+	net = ModelSerializer.restoreMultiLayerNetwork(filepath);
+    //System.out.println("Saved and loaded parameters are equal:      " + net.params().equals(restored.params()));
+    //System.out.println("Saved and loaded configurations are equal:  " + net.getLayerWiseConfigurations().equals(restored.getLayerWiseConfigurations()));
+}
 public static INDArray calculate(double[] input){
 	INDArray in = Nd4j.zeros(1, net.layerInputSize(0));
 	for(int i = 0;i<input.length;i++) {

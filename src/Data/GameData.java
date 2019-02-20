@@ -1,14 +1,19 @@
 package Data;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.common.reflect.TypeToken;
 
 import Internet.HTTP;
 
@@ -20,7 +25,21 @@ public class GameData {
 	public static ArrayList<String> teamkeys = new ArrayList<String>();
 	// Specific alliance data that a team was on
 	public static HashMap<String,ArrayList<GameDataStructure>> matchdata = new HashMap<String,ArrayList<GameDataStructure>>();
-	
+	public static void uploadMatchData(String filePath) throws FileNotFoundException {
+		File file = new File(filePath); 
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(file); 
+		String data = "";
+		
+		while(sc.hasNextLine()) {
+			data+= sc.nextLine();
+		}
+        Type token = new TypeToken<HashMap<String, ArrayList<GameDataStructure>>>(){
+            private static final long serialVersionUID = 3909772501481775418L;
+        }.getType();
+        Gson gson = new Gson();
+        GameData.matchdata = gson.fromJson(data, token);
+	}
 	public static void setMatchData() throws JsonSyntaxException, Exception {
 		for(int i = 0;i<GameData.teamkeys.size();i++) {
 			ArrayList<GameDataStructure> output = new ArrayList<GameDataStructure>();
