@@ -83,8 +83,8 @@ public class GameData {
 				GDS.blueData.habLineRobot2=blue.get("habLineRobot2").getAsString();
 				GDS.blueData.habLineRobot3=blue.get("habLineRobot3").getAsString();
 				
-				GDS.blueData.midLeftRocketFar=blue.get("lowLeftRocketFar").getAsString();
-				GDS.blueData.midLeftRocketNear=blue.get("lowLeftRocketNear").getAsString();
+				GDS.blueData.lowLeftRocketFar=blue.get("lowLeftRocketFar").getAsString();
+				GDS.blueData.lowLeftRocketNear=blue.get("lowLeftRocketNear").getAsString();
 				GDS.blueData.lowRightRocketFar=blue.get("lowRightRocketFar").getAsString();
 				GDS.blueData.lowRightRocketNear=blue.get("lowRightRocketNear").getAsString();
 
@@ -136,8 +136,8 @@ public class GameData {
 				GDS.redData.habLineRobot2=red.get("habLineRobot2").getAsString();
 				GDS.redData.habLineRobot3=red.get("habLineRobot3").getAsString();
 				
-				GDS.redData.midLeftRocketFar=red.get("lowLeftRocketFar").getAsString();
-				GDS.redData.midLeftRocketNear=red.get("lowLeftRocketNear").getAsString();
+				GDS.redData.lowLeftRocketFar=red.get("lowLeftRocketFar").getAsString();
+				GDS.redData.lowLeftRocketNear=red.get("lowLeftRocketNear").getAsString();
 				GDS.redData.lowRightRocketFar=red.get("lowRightRocketFar").getAsString();
 				GDS.redData.lowRightRocketNear=red.get("lowRightRocketNear").getAsString();
 
