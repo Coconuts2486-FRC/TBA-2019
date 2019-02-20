@@ -1,8 +1,6 @@
-package Artaficial_Intelligence;
+package Artificial_Intelligence;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -20,10 +18,10 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer.Builder;
 
 
-public class DeepNetwork {
+public class DeepNetworkAbilities {
 public static MultiLayerNetwork net;
 public static INDArray calculate(double[] input){
-	INDArray in = Nd4j.zeros(1, DeepNetwork.net.layerInputSize(0));
+	INDArray in = Nd4j.zeros(1, net.layerInputSize(0));
 	for(int i = 0;i<input.length;i++) {
 		in.putScalar(new int[]{0, i},input[i]);
 	}

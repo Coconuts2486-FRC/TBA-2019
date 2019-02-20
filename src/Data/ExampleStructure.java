@@ -1,4 +1,4 @@
-package Artaficial_Intelligence;
+package Data;
 
 import java.util.ArrayList;
 
