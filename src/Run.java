@@ -1,9 +1,17 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.JsonSyntaxException;
+
+import Artificial_Intelligence.DeepNetworkAbilities;
+import CSV.CSVWriter;
 import Data.GameData;
 import GUI.MainGUI;
 import Internet.HTTP;
 import Internet.PingTBA;
+import JSONing.JSONGenerators;
+import JSONing.JSON_Parsing;
 
 public class Run {
 	//2019azfl Flagstaff
@@ -15,11 +23,24 @@ public class Run {
 		System.out.println(baseFile.exists());
 		baseFile.mkdir();
 		System.out.println(baseFile.exists());
-		MainGUI GUI = new MainGUI();
-		PingTBA ping = new PingTBA();
-		GUI.Ping=ping.ping();
+		//MainGUI GUI = new MainGUI();
+		//PingTBA ping = new PingTBA();
+		//GUI.Ping=ping.ping();
 		GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
-		GUI.run();
+		
+		//GameData.setMatchData();
+		//JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
+		//CSVWriter.WriteGameData(basedir+"Match Data.csv");
+		
+		GameData.uploadMatchData(basedir+"Match Data.txt");
+		DeepNetworkAbilities.loadModel(basedir+"DeepNetwork.zip");
+		//DeepNetworkAbilities.GenerateClassificationNet(100, 8, 80, 3);
+		//DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
+		
+		DeepNetworkAbilities.Train(10000, null, "/Users/logan42474/Desktop/2019 DeepNetwork Training .csv", true);
+		DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
+		System.out.println(DeepNetworkAbilities.calculate("frc1073"));
+		System.out.println(DeepNetworkAbilities.calculate("frc1153"));
 		System.out.println("Done");
 
 		/*

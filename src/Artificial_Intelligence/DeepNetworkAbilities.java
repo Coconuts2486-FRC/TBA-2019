@@ -2,6 +2,8 @@ package Artificial_Intelligence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -16,6 +18,9 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+
+import Data.GameData;
+
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer.Builder;
 
@@ -30,23 +35,70 @@ public static void loadModel(String filepath) throws IOException {
     //System.out.println("Saved and loaded parameters are equal:      " + net.params().equals(restored.params()));
     //System.out.println("Saved and loaded configurations are equal:  " + net.getLayerWiseConfigurations().equals(restored.getLayerWiseConfigurations()));
 }
-public static INDArray calculate(double[] input){
+public static INDArray calculate(String teamkey){
 	INDArray in = Nd4j.zeros(1, net.layerInputSize(0));
-	for(int i = 0;i<input.length;i++) {
-		in.putScalar(new int[]{0, i},input[i]);
+	ArrayList<Double> inputs = new ArrayList<Double>();
+	for(int ie = 0; ie<5;ie++) {
+		if(GameData.matchdata.get(teamkey).get(ie).alliance.equals("blue")) {
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay1));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay2));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay3));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay4));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay5));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay6));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay7));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay8));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topRightRocketNear));
+			
+		}else {
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay1));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay2));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay3));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay4));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay5));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay6));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay7));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay8));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topRightRocketNear));
+		}
+	}
+	for(int i = 0;i<100;i++) {
+		in.putScalar(new int[]{0, i},inputs.get(i));
 	}
 	return net.output(in);
 }
-public static void Train(int trainingItterations, Double minimalError, String filePath, int inputs, int outputs, boolean hasHeader) throws FileNotFoundException {
-	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, inputs, outputs, hasHeader);
-	net.setListeners(new ScoreIterationListener(500));
+public static void Train(int trainingItterations, Double minimalError, String filePath, boolean hasHeader) throws FileNotFoundException {
+	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, hasHeader);
+	net.setListeners(new ScoreIterationListener(1000));
 	if(minimalError==null) {
 		for(int i = 0; i<trainingItterations; i++) {
 			net.fit(ds);
 		}
 	}else{
 		net.fit(ds);
-		while(net.score()>=minimalError) {
+		while(net.score()>minimalError) {
 			net.fit(ds);
 		}
 	}
@@ -61,7 +113,7 @@ public static void GenerateClassificationNet(int numberOfInputs, int numberOfOut
 	 InputLayerBuilder.nIn(numberOfInputs);
 	 InputLayerBuilder.nOut(numberOfHiddenNodes);
 	 InputLayerBuilder.activation(Activation.LEAKYRELU);
-	 InputLayerBuilder.weightInit(WeightInit.XAVIER);
+	 InputLayerBuilder.weightInit(WeightInit.RELU_UNIFORM);
 	 
 	 listBuilder.layer(0, InputLayerBuilder.build());
 	 
@@ -70,15 +122,15 @@ public static void GenerateClassificationNet(int numberOfInputs, int numberOfOut
 		 HiddenLayerBuilder.nIn(numberOfHiddenNodes);
 		 HiddenLayerBuilder.nOut(numberOfHiddenNodes);
 		 HiddenLayerBuilder.activation(Activation.SIGMOID);
-		 HiddenLayerBuilder.weightInit(WeightInit.XAVIER);
+		 HiddenLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 		 listBuilder.layer(i, HiddenLayerBuilder.build());
 	 }
 	 
-	 Builder OutputLayerBuilder = new OutputLayer.Builder(LossFunctions.LossFunction.XENT);
+	 Builder OutputLayerBuilder = new OutputLayer.Builder(LossFunctions.LossFunction.HINGE);
 	 OutputLayerBuilder.nIn(numberOfHiddenNodes);
 	 OutputLayerBuilder.nOut(numberOfOutputs);
 	 OutputLayerBuilder.activation(Activation.SIGMOID);
-	 OutputLayerBuilder.weightInit(WeightInit.XAVIER);
+	 OutputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 	 listBuilder.layer(numberOfHiddenLayers+1, OutputLayerBuilder.build());
 	 listBuilder.backprop(true);
 	 

@@ -150,7 +150,7 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
-					DeepNetworkAbilities.Train(10000, 0.01, txtDirectoryToCsv.getText(), 2, 1, false);
+					DeepNetworkAbilities.Train(10000, 0.01, txtDirectoryToCsv.getText(), true);
 					DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -172,7 +172,7 @@ public class MainGUI extends JFrame {
 				File file = new File(basedir+"DeepNetwork.zip");
 				if(!file.exists()) {
 					try {
-						DeepNetworkAbilities.GenerateClassificationNet(2, 1, 3, 1);
+						DeepNetworkAbilities.GenerateClassificationNet(100, 16, 110, 3);
 						DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
