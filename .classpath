@@ -2,6 +2,48 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="Resources/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="Resources/aopalliance-repackaged-2.5.0-b32.jar"/>
+	<classpathentry kind="lib" path="Resources/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="Resources/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="Resources/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="Resources/grizzly-framework-2.3.28.jar"/>
+	<classpathentry kind="lib" path="Resources/grizzly-http-2.3.28.jar"/>
+	<classpathentry kind="lib" path="Resources/grizzly-http-server-2.3.28.jar"/>
+	<classpathentry kind="lib" path="Resources/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="Resources/guice-4.1.0.jar"/>
+	<classpathentry kind="lib" path="Resources/hk2-api-2.5.0-b32.jar"/>
+	<classpathentry kind="lib" path="Resources/hk2-locator-2.5.0-b32.jar"/>
+	<classpathentry kind="lib" path="Resources/hk2-utils-2.5.0-b32.jar"/>
+	<classpathentry kind="lib" path="Resources/httpclient-4.5.3.jar"/>
+	<classpathentry kind="lib" path="Resources/httpcore-4.4.6.jar"/>
+	<classpathentry kind="lib" path="Resources/httpmime-4.5.3.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-annotations-2.8.0.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-core-2.8.7.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-databind-2.8.7.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-jaxrs-base-2.8.7.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-jaxrs-json-provider-2.8.7.jar"/>
+	<classpathentry kind="lib" path="Resources/jackson-module-jaxb-annotations-2.8.7.jar"/>
+	<classpathentry kind="lib" path="Resources/javassist-3.20.0-GA.jar"/>
+	<classpathentry kind="lib" path="Resources/javax.annotation-api-1.2.jar"/>
+	<classpathentry kind="lib" path="Resources/javax.inject-1.jar"/>
+	<classpathentry kind="lib" path="Resources/javax.inject-2.5.0-b32.jar"/>
+	<classpathentry kind="lib" path="Resources/javax.ws.rs-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-client-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-common-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-container-grizzly2-http-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-entity-filtering-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-guava-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-media-jaxb-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-media-json-jackson-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/jersey-server-2.25.1.jar"/>
+	<classpathentry kind="lib" path="Resources/json-20160810.jar"/>
+	<classpathentry kind="lib" path="Resources/osgi-resource-locator-1.0.1.jar"/>
+	<classpathentry kind="lib" path="Resources/telegrambots-4.1.jar"/>
+	<classpathentry kind="lib" path="Resources/telegrambots-meta-4.1.jar"/>
+	<classpathentry kind="lib" path="Resources/validation-api-1.1.0.Final.jar"/>
+	<classpathentry kind="lib" path="Resources/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="Resources/commons-csv-1.6.jar"/>
 	<classpathentry kind="lib" path="Resources/aeron-all-1.4.0.jar"/>
 	<classpathentry kind="lib" path="Resources/Agrona-0.5.4.jar"/>
 	<classpathentry kind="lib" path="Resources/akka-actor_2.11-2.3.16.jar"/>
@@ -11,7 +53,6 @@
 	<classpathentry kind="lib" path="Resources/akka-remote_2.11-2.3.16.jar"/>
 	<classpathentry kind="lib" path="Resources/akka-slf4j_2.11-2.3.16.jar"/>
 	<classpathentry kind="lib" path="Resources/annotations-13.0.jar"/>
-	<classpathentry kind="lib" path="Resources/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="Resources/arbiter-core-1.0.0-beta3.jar"/>
 	<classpathentry kind="lib" path="Resources/arbiter-deeplearning4j-1.0.0-beta3.jar"/>
 	<classpathentry kind="lib" path="Resources/arbiter-ui_2.11-1.0.0-beta3.jar"/>
@@ -34,7 +75,6 @@
 	<classpathentry kind="lib" path="Resources/commons-digester-1.8.jar"/>
 	<classpathentry kind="lib" path="Resources/commons-el-1.0.jar"/>
 	<classpathentry kind="lib" path="Resources/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="Resources/commons-io-2.5.jar"/>
 	<classpathentry kind="lib" path="Resources/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="Resources/commons-lang3-3.6.jar"/>
 	<classpathentry kind="lib" path="Resources/commons-logging-1.1.1.jar"/>
@@ -73,8 +113,7 @@
 	<classpathentry kind="lib" path="Resources/flatbuffers-java-1.9.0.jar"/>
 	<classpathentry kind="lib" path="Resources/flycapture-2.11.3.121-1.4.3.jar"/>
 	<classpathentry kind="lib" path="Resources/freemarker-2.3.23.jar"/>
-	<classpathentry kind="lib" path="Resources/guava-17.0.jar"/>
-	<classpathentry kind="lib" path="Resources/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="Resources/gson-2.7.jar"/>
 	<classpathentry kind="lib" path="Resources/guice-4.0.jar"/>
 	<classpathentry kind="lib" path="Resources/guice-assistedinject-4.0.jar"/>
 	<classpathentry kind="lib" path="Resources/hadoop-annotations-2.2.0.jar"/>
@@ -93,7 +132,6 @@
 	<classpathentry kind="lib" path="Resources/httpclient-4.3.5.jar"/>
 	<classpathentry kind="lib" path="Resources/httpcore-4.3.2.jar"/>
 	<classpathentry kind="lib" path="Resources/httpcore-nio-4.4.4.jar"/>
-	<classpathentry kind="lib" path="Resources/httpmime-4.5.3.jar"/>
 	<classpathentry kind="lib" path="Resources/imageio-bmp-3.1.1.jar"/>
 	<classpathentry kind="lib" path="Resources/imageio-core-3.1.1.jar"/>
 	<classpathentry kind="lib" path="Resources/imageio-jpeg-3.1.1.jar"/>
@@ -117,7 +155,6 @@
 	<classpathentry kind="lib" path="Resources/javacpp-1.4.3.jar"/>
 	<classpathentry kind="lib" path="Resources/javacv-1.4.3.jar"/>
 	<classpathentry kind="lib" path="Resources/javassist-3.19.0-GA.jar"/>
-	<classpathentry kind="lib" path="Resources/javax.inject-1.jar"/>
 	<classpathentry kind="lib" path="Resources/javax.ws.rs-api-2.0.jar"/>
 	<classpathentry kind="lib" path="Resources/jaxb-core-2.2.11.jar"/>
 	<classpathentry kind="lib" path="Resources/jaxb-impl-2.2.11.jar"/>
@@ -141,6 +178,7 @@
 	<classpathentry kind="lib" path="Resources/joda-convert-1.7.jar"/>
 	<classpathentry kind="lib" path="Resources/joda-time-2.2.jar"/>
 	<classpathentry kind="lib" path="Resources/jsch-0.1.42.jar"/>
+	<classpathentry kind="lib" path="Resources/json-20160212.jar"/>
 	<classpathentry kind="lib" path="Resources/jsp-api-2.1.jar"/>
 	<classpathentry kind="lib" path="Resources/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="Resources/junit-3.8.1.jar"/>
@@ -285,13 +323,10 @@
 	<classpathentry kind="lib" path="Resources/typetools-0.4.3.jar"/>
 	<classpathentry kind="lib" path="Resources/uncommons-maths-1.2.2a.jar"/>
 	<classpathentry kind="lib" path="Resources/unirest-java-1.4.9.jar"/>
-	<classpathentry kind="lib" path="Resources/validation-api-1.1.0.Final.jar"/>
 	<classpathentry kind="lib" path="Resources/videoinput-0.200-1.4.3.jar"/>
 	<classpathentry kind="lib" path="Resources/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="Resources/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="lib" path="Resources/xmlenc-0.52.jar"/>
 	<classpathentry kind="lib" path="Resources/zookeeper-3.4.6.jar"/>
-	<classpathentry kind="lib" path="Resources/gson-2.8.5.jar"/>
-	<classpathentry kind="lib" path="Resources/commons-csv-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

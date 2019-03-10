@@ -8,11 +8,36 @@ import java.nio.file.Paths;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import Artificial_Intelligence.DeepNetworkAbilities;
 import Data.GameData;
 
 
 public class CSVWriter {
-public static void WriteGameData(String filepath) throws IOException {
+	public static void WritePredictedData(String filepath) throws IOException {
+		 BufferedWriter writer = Files.newBufferedWriter(Paths.get(filepath));
+		CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(
+				"TeamKey","RocketHatch Low","RocketHatch Mid","RocketHatch High","RocketCargo Low",
+				"RocketCargo Mid","RocketCargo High","CargoShip Hatches","CargoShip Cargo"));
+		Object[] keys = GameData.matchdata.keySet().toArray();
+		for(int i = 0; i< keys.length;i++) {
+			if(GameData.matchdata.get(keys[i]).size()>4) {
+				csv.printRecord(keys[i]
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(0)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(1)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(2)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(3)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(4)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(5)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(6)
+						,DeepNetworkAbilities.calculate((String) keys[i]).getDouble(7));
+				
+			}else {
+				csv.printRecord(keys[i],"Not Enough Matches Played");
+			}
+			csv.flush();
+		}
+	}
+	public static void WriteGameData(String filepath) throws IOException {
 	 BufferedWriter writer = Files.newBufferedWriter(Paths.get(filepath));
 	CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("TeamKey", "Match Number","Score","Auto Points","Teleop Points",
 			"Bay1","Bay2","Bay3","Bay4","Bay5","Bay6","Bay7","Bay8",

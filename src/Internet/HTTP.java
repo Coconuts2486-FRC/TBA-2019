@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import Data.GameData;
+import Data.Secretkeys;
 import jdk.nashorn.internal.parser.JSONParser;
 
 public class HTTP {
@@ -22,7 +23,7 @@ public class HTTP {
         HttpURLConnection con = (HttpURLConnection) theBA.openConnection();
         con.setRequestProperty("User-Agent", "Mozilla");
         con.setRequestMethod("GET");
-        con.addRequestProperty("X-TBA-Auth-Key", "rwG5JxLtpFOJKr9jqDclVyGkUHxGYaDC0OoL9a8IZj4cWh5lWtZxJ1OnWn8xva5Y");
+        con.addRequestProperty("X-TBA-Auth-Key", Secretkeys.keys.TBAKey);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 

@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import com.google.gson.JsonSyntaxException;
 
 import Artificial_Intelligence.DeepNetworkAbilities;
@@ -14,6 +18,7 @@ import Data.GameData;
 import Internet.PingTBA;
 import JSONing.JSONGenerators;
 import JSONing.JSON_Parsing;
+import Telegram.MyAmazingBot;
 
 import java.awt.Color;
 import javax.swing.JRadioButton;
@@ -59,7 +64,7 @@ public class MainGUI extends JFrame {
 	public MainGUI() {
 		setTitle("Destination Deep Space Scouting");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 344);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(162,5,29));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -150,7 +155,7 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
-					DeepNetworkAbilities.Train(10000, 0.01, txtDirectoryToCsv.getText(), true);
+					DeepNetworkAbilities.Train(1000, null, txtDirectoryToCsv.getText(), true);
 					DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -172,7 +177,7 @@ public class MainGUI extends JFrame {
 				File file = new File(basedir+"DeepNetwork.zip");
 				if(!file.exists()) {
 					try {
-						DeepNetworkAbilities.GenerateClassificationNet(100, 16, 110, 3);
+						DeepNetworkAbilities.GenerateClassificationNet(100, 8, 75, 3);
 						DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -220,8 +225,14 @@ public class MainGUI extends JFrame {
 		JButton btnWriteNetData = new JButton("Write Net Data");
 		btnWriteNetData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lblNotActive.setText("--- Doing Nothing ---");
+				lblNotActive.setText("--- Writing Data ---");
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
+				try {
+					CSVWriter.WritePredictedData(basedir+"Predicted Data.csv");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				lblNotActive.setText("--- Not Active ---");
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 			}
@@ -244,5 +255,34 @@ public class MainGUI extends JFrame {
 		lblNewLabel.setForeground(new Color(255,253,56));
 		lblNewLabel.setBounds(135, 45, 309, 16);
 		contentPane.add(lblNewLabel);
+		
+		JButton btnServer = new JButton("Server");
+		btnServer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Running Server");
+				lblNotActive.setText("--- Server is Starting up ---");
+				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
+				
+				ApiContextInitializer.init();
+		    	TelegramBotsApi botsApi = new TelegramBotsApi();
+
+		         try {
+		             botsApi.registerBot(new MyAmazingBot()); 
+		         } catch (TelegramApiException e1) {
+		             e1.printStackTrace();
+		         }
+		         lblNotActive.setText("--- Server is Running ---");
+					lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
+		        // lblNotActive.setText("--- Not Active ---");
+					//lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
+			}
+		});
+		btnServer.setBounds(6, 281, 117, 29);
+		contentPane.add(btnServer);
+		
+		JLabel lblStartsMessagingServer = new JLabel("Starts Messaging Server");
+		lblStartsMessagingServer.setForeground(new Color(255,253,56));
+		lblStartsMessagingServer.setBounds(135, 286, 309, 16);
+		contentPane.add(lblStartsMessagingServer);
 	}
 }
