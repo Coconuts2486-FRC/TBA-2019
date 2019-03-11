@@ -43,6 +43,7 @@ public class MainGUI extends JFrame {
 	public static long Ping;
 	static String basedir = System.getProperty("user.home")+"/Desktop/FRC 2019 Data/";
 	private JLabel lblNotActive;
+	private JTextField txtTrainingItterations;
 
 	/**
 	 * Launch the application.
@@ -164,7 +165,7 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
-					DeepNetworkAbilities.Train(1000, null, txtDirectoryToCsv.getText(), true);
+					DeepNetworkAbilities.Train(Integer.parseInt(txtTrainingItterations.getText().toString()), null, txtDirectoryToCsv.getText(), true);
 					DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -186,7 +187,7 @@ public class MainGUI extends JFrame {
 				File file = new File(basedir+"DeepNetwork.zip");
 				if(!file.exists()) {
 					try {
-						DeepNetworkAbilities.GenerateClassificationNet(100, 8, 25, 3);
+						DeepNetworkAbilities.GenerateClassificationNet(100, 8, 20, 3);
 						DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -227,7 +228,7 @@ public class MainGUI extends JFrame {
 		txtDirectoryToCsv.setForeground(Color.LIGHT_GRAY);
 		txtDirectoryToCsv.setHorizontalAlignment(SwingConstants.CENTER);
 		txtDirectoryToCsv.setText("Directory to CSV");
-		txtDirectoryToCsv.setBounds(135, 199, 309, 23);
+		txtDirectoryToCsv.setBounds(135, 199, 143, 23);
 		contentPane.add(txtDirectoryToCsv);
 		txtDirectoryToCsv.setColumns(10);
 		
@@ -294,5 +295,13 @@ public class MainGUI extends JFrame {
 		lblStartsMessagingServer.setForeground(new Color(255,253,56));
 		lblStartsMessagingServer.setBounds(135, 286, 309, 16);
 		contentPane.add(lblStartsMessagingServer);
+		
+		txtTrainingItterations = new JTextField();
+		txtTrainingItterations.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTrainingItterations.setText("Training Itterations");
+		txtTrainingItterations.setForeground(Color.LIGHT_GRAY);
+		txtTrainingItterations.setBounds(290, 196, 143, 29);
+		contentPane.add(txtTrainingItterations);
+		txtTrainingItterations.setColumns(10);
 	}
 }

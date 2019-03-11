@@ -16,6 +16,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -115,6 +116,7 @@ public static void GenerateClassificationNet(int numberOfInputs, int numberOfOut
 	 InputLayerBuilder.activation(Activation.SIGMOID);
 	 InputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 	 
+	 
 	 listBuilder.layer(0, InputLayerBuilder.build());
 	 
 	 for(int i = 1;i<=numberOfHiddenLayers;i++) {
@@ -126,13 +128,14 @@ public static void GenerateClassificationNet(int numberOfInputs, int numberOfOut
 		 listBuilder.layer(i, HiddenLayerBuilder.build());
 	 }
 	 
-	 Builder OutputLayerBuilder = new OutputLayer.Builder(LossFunctions.LossFunction.HINGE);
+	 Builder OutputLayerBuilder = new OutputLayer.Builder(LossFunctions.LossFunction.XENT);
 	 OutputLayerBuilder.nIn(numberOfHiddenNodes);
 	 OutputLayerBuilder.nOut(numberOfOutputs);
 	 OutputLayerBuilder.activation(Activation.SIGMOID);
 	 OutputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 	 listBuilder.layer(numberOfHiddenLayers+1, OutputLayerBuilder.build());
 	 listBuilder.backprop(true);
+	 OutputLayerBuilder.updater(new Nesterovs(0.1));
 	 
 	 MultiLayerConfiguration configure = listBuilder.build();
      MultiLayerNetwork neto = new MultiLayerNetwork(configure);

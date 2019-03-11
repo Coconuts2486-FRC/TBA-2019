@@ -9,8 +9,12 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
+import com.google.gson.GsonBuilder;
+
 import Data.ExampleStructure;
 import Data.GameData;
+import JSONing.JSONGenerators;
+import JSONing.JSON_Parsing;
 
 public class DataTransformer {
 	public static Double LabelToDouble(String input) {
@@ -32,8 +36,9 @@ public class DataTransformer {
 		Object[] keys = classifiers.keySet().toArray();
 		for(int i = 0;i<classifiers.size();i++) {
 			if(GameData.matchdata.get(keys[i]).size()>4) {
-				ExampleStructure es = new ExampleStructure();
-				for(int ie = 0; ie<5;ie++) {
+				for(int z = 0;z<GameData.matchdata.get(keys[i]).size()-4;z++) {
+					ExampleStructure es = new ExampleStructure();
+				for(int ie = z; ie<5+z;ie++) {
 					if(GameData.matchdata.get(keys[i]).get(ie).alliance.equals("blue")) {
 						es.inputs.add(LabelToDouble(GameData.matchdata.get(keys[i]).get(ie).blueData.bay1));
 						es.inputs.add(LabelToDouble(GameData.matchdata.get(keys[i]).get(ie).blueData.bay2));
@@ -79,10 +84,12 @@ public class DataTransformer {
 						es.inputs.add(LabelToDouble(GameData.matchdata.get(keys[i]).get(ie).redData.topRightRocketNear));
 					}
 				}
-				for(int ie = 0; ie<8;ie++) {
-					es.outputs.add(classifiers.get(keys[i]).get(ie));
+				for(int iee = 0; iee<8;iee++) {
+					es.outputs.add(classifiers.get(keys[i]).get(iee));
 				}
 				data.add(es);
+				JSON_Parsing.WriteToFile(new GsonBuilder().setPrettyPrinting().create().toJson(data), "/Users/logan42474/Desktop/2019 DeepNetwork Training data stuff.txt");
+				}
 			}else {
 				
 			}
