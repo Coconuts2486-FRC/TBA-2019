@@ -19,7 +19,7 @@ import Internet.HTTP;
 
 public class GameData {
 	public static String year = "2019";
-	public static String event = "week0";
+	public static String event = "azfl";
 	//week0
 	// teamkeys of all teams at an event
 	public static ArrayList<String> teamkeys = new ArrayList<String>();

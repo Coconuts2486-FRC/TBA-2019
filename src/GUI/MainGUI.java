@@ -186,7 +186,7 @@ public class MainGUI extends JFrame {
 				File file = new File(basedir+"DeepNetwork.zip");
 				if(!file.exists()) {
 					try {
-						DeepNetworkAbilities.GenerateClassificationNet(100, 8, 75, 3);
+						DeepNetworkAbilities.GenerateClassificationNet(100, 8, 25, 3);
 						DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block

@@ -112,8 +112,8 @@ public static void GenerateClassificationNet(int numberOfInputs, int numberOfOut
 	 DenseLayer.Builder InputLayerBuilder = new DenseLayer.Builder();
 	 InputLayerBuilder.nIn(numberOfInputs);
 	 InputLayerBuilder.nOut(numberOfHiddenNodes);
-	 InputLayerBuilder.activation(Activation.LEAKYRELU);
-	 InputLayerBuilder.weightInit(WeightInit.RELU_UNIFORM);
+	 InputLayerBuilder.activation(Activation.SIGMOID);
+	 InputLayerBuilder.weightInit(WeightInit.SIGMOID_UNIFORM);
 	 
 	 listBuilder.layer(0, InputLayerBuilder.build());
 	 

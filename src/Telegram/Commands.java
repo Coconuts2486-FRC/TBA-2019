@@ -31,6 +31,7 @@ private static String[] format(Update input) {
 	}
 }
 public static String stats(String teamnumber) {
+	try {
 	String out = "Team: "+ teamnumber +"\n Matches Played: "+GameData.matchdata.get("frc"+teamnumber).size()
 			+"\n Predicted Abilities:"
 			+ "\n Rocket Hatch Low:  "+ DeepNetworkAbilities.calculate("frc"+teamnumber).getDouble(0)
@@ -41,7 +42,6 @@ public static String stats(String teamnumber) {
 			+ "\n Rocket Cargo High: "+ DeepNetworkAbilities.calculate("frc"+teamnumber).getDouble(5)
 			+ "\n CargoShip Hatches: "+ DeepNetworkAbilities.calculate("frc"+teamnumber).getDouble(6)
 			+ "\n CargoShip Cargo:   "+ DeepNetworkAbilities.calculate("frc"+teamnumber).getDouble(7);
-	try {
 	return out;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data. There is a possibility that the database has not been booted up yet."
