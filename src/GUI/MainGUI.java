@@ -15,6 +15,7 @@ import com.google.gson.JsonSyntaxException;
 
 import Artificial_Intelligence.DeepNetworkAbilities;
 import Data.GameData;
+import Internet.HTTP;
 import Internet.PingTBA;
 import JSONing.JSONGenerators;
 import JSONing.JSON_Parsing;
@@ -30,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class MainGUI extends JFrame {
@@ -100,6 +102,7 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
+					GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
 					GameData.setMatchData();
 				} catch (JsonSyntaxException e2) {
 					// TODO Auto-generated catch block
@@ -136,6 +139,12 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
+					try {
+						GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					GameData.uploadMatchData(basedir+"Match Data.txt");
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
@@ -271,6 +280,7 @@ public class MainGUI extends JFrame {
 		         } catch (TelegramApiException e1) {
 		             e1.printStackTrace();
 		         }
+		         
 		         lblNotActive.setText("--- Server is Running ---");
 					lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 		        // lblNotActive.setText("--- Not Active ---");
