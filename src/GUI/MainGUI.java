@@ -120,7 +120,8 @@ public class MainGUI extends JFrame {
 					e2.printStackTrace();
 				}
 				try {
-					CSVWriter.WriteGameData(basedir+"Match Data.csv");
+					CSVWriter cs = new CSVWriter();
+					cs.WriteGameData(basedir+"Match Data.csv");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -234,7 +235,8 @@ public class MainGUI extends JFrame {
 				lblNotActive.setText("--- Writing Data ---");
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				try {
-					CSVWriter.WritePredictedData(basedir+"Predicted Data.csv");
+					CSVWriter cs = new CSVWriter();
+					cs.WritePredictedData(basedir+"Predicted Data.csv");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

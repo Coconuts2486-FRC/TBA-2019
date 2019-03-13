@@ -41,7 +41,6 @@ public static INDArray calculate(String teamkey){
 	ArrayList<Double> inputs = new ArrayList<Double>();
 	int len = GameData.matchdata.get(teamkey).size();
 	for(int ie = len-5; ie<len;ie++) {
-		System.out.println(ie);
 		if(GameData.matchdata.get(teamkey).get(ie).alliance.equals("blue")) {
 			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay1));
 			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay2));

@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.nd4j.linalg.dataset.DataSet;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.google.gson.JsonSyntaxException;
 
+import Artificial_Intelligence.DataTransformer;
 import Artificial_Intelligence.DeepNetworkAbilities;
 import CSV.CSVWriter;
 import Data.GameData;
@@ -62,7 +64,8 @@ public static String update(Update input) {
 		JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
 		File csfile = new File(basedir+"Match Data.csv");
 		csfile.delete();
-		CSVWriter.WriteGameData(basedir+"Match Data.csv");
+		CSVWriter cs = new CSVWriter();
+		cs.WriteGameData(basedir+"Match Data.csv");
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -120,7 +123,7 @@ public static String startup(Update input) {
 }
 public static String boot(Update input, String[] tours){
 	if(tours.length>1) {
-	String tour = tours[1];
+	String tour = tours[1].toLowerCase();
 	if(input.getMessage().getFrom().getId()==796720243) {
 		MyAmazingBot MAB = new MyAmazingBot();
 		if(tour.equals("az")||tour.equals("azfl")||tour.equals("flag")||tour.equals("flagstaff")||tour.equals("arizona")||tour.equals("nau")) {
@@ -140,12 +143,14 @@ public static String boot(Update input, String[] tours){
 		MAB.errorMessage(input, "Downloading Data...");
 		
 		try {
+			GameData.teamkeys.clear();
 			GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			MAB.errorMessage(input, e.toString());
 		}
 		try {
+			GameData.matchdata.clear();
 			GameData.setMatchData();
 		} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
@@ -166,7 +171,8 @@ public static String boot(Update input, String[] tours){
 		try {
 			File csfile = new File(basedir+"Match Data.csv");
 			csfile.delete();
-			CSVWriter.WriteGameData(basedir+"Match Data.csv");
+			CSVWriter cs = new CSVWriter();
+			cs.WriteGameData(basedir+"Match Data.csv");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			MAB.errorMessage(input, e.toString());
@@ -201,6 +207,7 @@ public static String boot(Update input, String[] tours){
 }
 public static String stats(String[] teamnumber) {
 	if(teamnumber.length>1) {
+		if(GameData.matchdata.get("frc"+teamnumber[1]).size()>4) {
 	try {
 		System.out.println(teamnumber[1]);
 		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).size());
@@ -220,6 +227,11 @@ public static String stats(String[] teamnumber) {
 				+ " There is a possibility that the database has not been booted up yet."
 				+ " The error in question is: "+e.toString();
 	}
+		}else {
+			return "Not enough matches played"
+					+ "\nMatches needed: 5"
+					+ "\nMatches played: "+GameData.matchdata.get("frc"+teamnumber[1]).size();
+		}
 	}else {
 		return "Make sure to enter a team number."
 				+ "\nExample: /stats 2486";

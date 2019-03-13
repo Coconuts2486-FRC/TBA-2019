@@ -13,7 +13,7 @@ import Data.GameData;
 
 
 public class CSVWriter {
-	public static void WritePredictedData(String filepath) throws IOException {
+	public void WritePredictedData(String filepath) throws IOException {
 		 BufferedWriter writer = Files.newBufferedWriter(Paths.get(filepath));
 		CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(
 				"TeamKey","RocketHatch Low","RocketHatch Mid","RocketHatch High","RocketCargo Low",
@@ -37,7 +37,7 @@ public class CSVWriter {
 			csv.flush();
 		}
 	}
-	public static void WriteGameData(String filepath) throws IOException {
+	public void WriteGameData(String filepath) throws IOException {
 	 BufferedWriter writer = Files.newBufferedWriter(Paths.get(filepath));
 	CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("TeamKey", "Match Number","Score","Auto Points","Teleop Points",
 			"Bay1","Bay2","Bay3","Bay4","Bay5","Bay6","Bay7","Bay8",
