@@ -37,9 +37,11 @@ public static void loadModel(String filepath) throws IOException {
     //System.out.println("Saved and loaded configurations are equal:  " + net.getLayerWiseConfigurations().equals(restored.getLayerWiseConfigurations()));
 }
 public static INDArray calculate(String teamkey){
-	INDArray in = Nd4j.zeros(1, net.layerInputSize(0));
+	INDArray in = Nd4j.zeros(1, 100);
 	ArrayList<Double> inputs = new ArrayList<Double>();
-	for(int ie = 0; ie<5;ie++) {
+	int len = GameData.matchdata.get(teamkey).size();
+	for(int ie = len-5; ie<len;ie++) {
+		System.out.println(ie);
 		if(GameData.matchdata.get(teamkey).get(ie).alliance.equals("blue")) {
 			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay1));
 			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay2));

@@ -113,6 +113,7 @@ public class MainGUI extends JFrame {
 					e2.printStackTrace();
 				}
 				try {
+					JSON_Parsing.WriteToFile(JSONGenerators.getAllTeamKeys(), basedir+"Team Keys.txt");
 					JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
 				} catch (Exception e2) {
 					// TODO Auto-generated catch block
@@ -140,12 +141,7 @@ public class MainGUI extends JFrame {
 				lblNotActive.paintImmediately(lblNotActive.getVisibleRect());
 				 
 				try {
-					try {
-						GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					GameData.uploadTeamKeys(basedir+"Team Keys.txt");
 					GameData.uploadMatchData(basedir+"Match Data.txt");
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block

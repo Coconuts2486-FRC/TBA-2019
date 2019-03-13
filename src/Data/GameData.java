@@ -25,6 +25,21 @@ public class GameData {
 	public static ArrayList<String> teamkeys = new ArrayList<String>();
 	// Specific alliance data that a team was on
 	public static HashMap<String,ArrayList<GameDataStructure>> matchdata = new HashMap<String,ArrayList<GameDataStructure>>();
+	public static void uploadEventKey(String filePath) throws FileNotFoundException {
+		File file = new File(filePath); 
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(file); 
+		String data = "";
+		
+		while(sc.hasNextLine()) {
+			data+= sc.nextLine();
+		}
+        Type token = new TypeToken<String>(){
+            private static final long serialVersionUID = 3909772501481775418L;
+        }.getType();
+        Gson gson = new Gson();
+        GameData.event = gson.fromJson(data, token);
+	}
 	public static void uploadMatchData(String filePath) throws FileNotFoundException {
 		File file = new File(filePath); 
 		@SuppressWarnings("resource")
@@ -39,6 +54,21 @@ public class GameData {
         }.getType();
         Gson gson = new Gson();
         GameData.matchdata = gson.fromJson(data, token);
+	}
+	public static void uploadTeamKeys(String filePath) throws FileNotFoundException {
+		File file = new File(filePath); 
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(file); 
+		String data = "";
+		
+		while(sc.hasNextLine()) {
+			data+= sc.nextLine();
+		}
+        Type token = new TypeToken<ArrayList<String>>(){
+            private static final long serialVersionUID = 3909772501481775418L;
+        }.getType();
+        Gson gson = new Gson();
+        GameData.teamkeys = gson.fromJson(data, token);
 	}
 	public static void setMatchData() throws JsonSyntaxException, Exception {
 		for(int i = 0;i<GameData.teamkeys.size();i++) {
