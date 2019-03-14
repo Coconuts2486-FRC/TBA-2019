@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -181,7 +182,7 @@ public static String boot(Update input, String[] tours){
 		if(!file.exists()) {
 			try {
 				MAB.errorMessage(input, "Building Neural Network...");
-				DeepNetworkAbilities.GenerateClassificationNet(100, 8, 20, 3);
+				DeepNetworkAbilities.GenerateClassificationNet(100, 8, 100, 3);
 				DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -207,20 +208,22 @@ public static String boot(Update input, String[] tours){
 }
 public static String stats(String[] teamnumber) {
 	if(teamnumber.length>1) {
+		try {
 		if(GameData.matchdata.get("frc"+teamnumber[1]).size()>4) {
 	try {
 		System.out.println(teamnumber[1]);
 		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).size());
+		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
 	String out = "Team: "+ teamnumber[1] +"\n Matches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).size()
 			+"\n Predicted Abilities:"
-			+ "\n Rocket Hatch Low:  "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(0),5)
-			+ "\n Rocket Hatch Mid:  "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(1),5)
-			+ "\n Rocket Hatch High: "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(2),5)
-			+ "\n Rocket Cargo Low:  "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(3),5)
-			+ "\n Rocket Cargo Mid:  "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(4),5)
-			+ "\n Rocket Cargo High: "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(5),5)
-			+ "\n CargoShip Hatches: "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(6),5)
-			+ "\n CargoShip Cargo:   "+ round(DeepNetworkAbilities.calculate("frc"+teamnumber[1]).getDouble(7),5);
+			+ "\n Rocket Hatch Low:  "+evaluate(data.getDouble(0))+" "+ round(data.getDouble(0),3)
+			+ "\n Rocket Hatch Mid:  "+evaluate(data.getDouble(1))+" "+ round(data.getDouble(1),3)
+			+ "\n Rocket Hatch High: "+evaluate(data.getDouble(2))+" "+ round(data.getDouble(2),3)
+			+ "\n Rocket Cargo Low:  "+evaluate(data.getDouble(3))+" "+ round(data.getDouble(3),3)
+			+ "\n Rocket Cargo Mid:  "+evaluate(data.getDouble(4))+" "+ round(data.getDouble(4),3)
+			+ "\n Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
+			+ "\n CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
+			+ "\n CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
 	return out;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data."
@@ -232,9 +235,19 @@ public static String stats(String[] teamnumber) {
 					+ "\nMatches needed: 5"
 					+ "\nMatches played: "+GameData.matchdata.get("frc"+teamnumber[1]).size();
 		}
+		}catch(Exception e) {
+			return "Team "+teamnumber[1]+" is not at this competition";
+		}
 	}else {
 		return "Make sure to enter a team number."
 				+ "\nExample: /stats 2486";
+	}
+}
+public static String evaluate(double value) {
+	if(value>=0.5) {
+		return "YES";
+	}else {
+		return "NO";
 	}
 }
 public static double round(double value, int places) {
