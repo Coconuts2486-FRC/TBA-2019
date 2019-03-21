@@ -16,15 +16,13 @@ import com.google.gson.JsonSyntaxException;
 import com.google.common.reflect.TypeToken;
 
 import Internet.HTTP;
+import JSONing.JSON_Parsing;
 
 public class GameData {
 	public static String year = "2019";
-	public static String event = "caoc";
-	//week0
-	// teamkeys of all teams at an event
+	public static String event = "azfl";
 	public static ArrayList<String> teamkeys = new ArrayList<String>();
-	// Specific alliance data that a team was on
-	public static HashMap<String,ArrayList<GameDataStructure>> matchdata = new HashMap<String,ArrayList<GameDataStructure>>();
+	public static HashMap<String,GameDataStructure> matchdata = new HashMap<String,GameDataStructure>();
 	public static void uploadEventKey(String filePath) throws FileNotFoundException {
 		File file = new File(filePath); 
 		@SuppressWarnings("resource")
@@ -49,7 +47,7 @@ public class GameData {
 		while(sc.hasNextLine()) {
 			data+= sc.nextLine();
 		}
-        Type token = new TypeToken<HashMap<String, ArrayList<GameDataStructure>>>(){
+        Type token = new TypeToken<HashMap<String, GameDataStructure>>(){
             private static final long serialVersionUID = 3909772501481775418L;
         }.getType();
         Gson gson = new Gson();
@@ -71,14 +69,14 @@ public class GameData {
         GameData.teamkeys = gson.fromJson(data, token);
 	}
 	public static void setMatchData() throws JsonSyntaxException, Exception {
+		HashMap<String, OPRs> oprs = JSON_Parsing.OPRsToHashMap();
 		for(int i = 0;i<GameData.teamkeys.size();i++) {
-			ArrayList<GameDataStructure> output = new ArrayList<GameDataStructure>();
+			GameDataStructure GD = new GameDataStructure();
 			JsonParser jsonParser = new JsonParser();
 			JsonArray jArray = jsonParser.parse(HTTP.matches(GameData.teamkeys.get(i))).getAsJsonArray();
-			
 			for(int ie = 0;ie<jArray.size();ie++) {
+				match GDS = new match();
 				try {
-				GameDataStructure GDS = new GameDataStructure();
 				JsonObject jObject = jArray.get(ie).getAsJsonObject();
 				JsonObject baseblue = jObject.get("alliances").getAsJsonObject().get("blue").getAsJsonObject();
 				JsonObject baseRed = jObject.get("alliances").getAsJsonObject().get("red").getAsJsonObject();
@@ -203,14 +201,22 @@ public class GameData {
 				GDS.redData.preMatchLevelRobot1=red.get("preMatchLevelRobot1").getAsString();
 				GDS.redData.preMatchLevelRobot2=red.get("preMatchLevelRobot2").getAsString();
 				GDS.redData.preMatchLevelRobot3=red.get("preMatchLevelRobot3").getAsString();
-				
-				output.add(GDS);
+				if(oprs.containsKey(GameData.teamkeys.get(i))) {
+				GD.OPR=oprs.get(GameData.teamkeys.get(i)).OPR;
+				GD.DPR=oprs.get(GameData.teamkeys.get(i)).DPR;
+				GD.CCWM=oprs.get(GameData.teamkeys.get(i)).CCWM;
+				}else {
+					GD.OPR=-100.0;
+					GD.DPR=-100.0;
+					GD.CCWM=-100.0;
+				}
+				GD.matches.add(GDS);
 				}catch(Exception e) {
 					System.out.println(e);
 				}
 			}
 		
-			GameData.matchdata.put(GameData.teamkeys.get(i), output);
+			GameData.matchdata.put(GameData.teamkeys.get(i), GD);
 		}
 		//Gson gson = new Gson();
 		//gson.fromJson(jObject)

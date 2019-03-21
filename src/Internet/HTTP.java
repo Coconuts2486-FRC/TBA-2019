@@ -31,16 +31,12 @@ public class HTTP {
         while ((response = in.readLine()) != null) {
             result.append(response);
         }
-        /*
-        Type token = new TypeToken<ArrayList<String>>(){}.getType();
-        
-        Gson out = new Gson();
-        out.fromJson(result.toString(), token);
-        */
         in.close();
         return result.toString();
     }
-
+	public static String getTeamOPRs(String eventkey) throws Exception {	
+		return (APIRead("event/"+eventkey+"/oprs"));
+	}
 	public static ArrayList<String> getTeamKeys(String eventkey) throws Exception {
 		Type token = new TypeToken<ArrayList<String>>(){}.getType(); 
 	    Gson out = new Gson();

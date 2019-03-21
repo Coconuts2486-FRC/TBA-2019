@@ -4,14 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import com.google.gson.JsonSyntaxException;
-
-import Artificial_Intelligence.DataTransformer;
 import Artificial_Intelligence.DeepNetworkAbilities;
 import CSV.CSVWriter;
 import Data.GameData;
@@ -33,6 +28,8 @@ public static String main(Update input){
 		case "/startup": output=startup(input);
 		break;
 		case "/update": output=update(input);
+		break;
+		case "/train": output=train(input,formatted);
 		break;
 		case "/start": output="To get statistics on teams use the command \n/stats"
 				+ "\nExample: /stats 2486";
@@ -102,7 +99,7 @@ public static String startup(Update input) {
 		break;
 		default: MAB.errorMessage(input, "Starting up "+GameData.event);
 		}
-		MAB.errorMessage(input, "Uploadind Data...");
+		MAB.errorMessage(input, "Uploading Data...");
 		try {
 			GameData.uploadTeamKeys(basedir+"Team Keys.txt");
 			GameData.uploadMatchData(basedir+"Match Data.txt");
@@ -121,6 +118,30 @@ public static String startup(Update input) {
 	}else {
 		return "--- You are not authorized to use this command ---";
 	}
+}
+public static String train(Update input, String[] maxerror) {
+	if(maxerror.length>1) {
+	if(input.getMessage().getFrom().getId()==796720243) {
+		MyAmazingBot MAB = new MyAmazingBot();
+		MAB.errorMessage(input, "Starting training...");
+		try {
+			DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[1]), basedir+"Training Data .csv", true);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			MAB.errorMessage(input, e.toString());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			MAB.errorMessage(input, e.toString());
+		}
+		return "Deep Learning Network has been trained!";
+	}else {
+		return "--- You are not authorized to use this command ---";
+	}
+	}else {
+		return "Enter a Maximum Error."
+				+ "\nExample: /train 0.1";
+	}
+	
 }
 public static String boot(Update input, String[] tours){
 	if(tours.length>1) {
@@ -209,12 +230,15 @@ public static String boot(Update input, String[] tours){
 public static String stats(String[] teamnumber) {
 	if(teamnumber.length>1) {
 		try {
-		if(GameData.matchdata.get("frc"+teamnumber[1]).size()>4) {
+		if(GameData.matchdata.get("frc"+teamnumber[1]).matches.size()>4) {
 	try {
 		System.out.println(teamnumber[1]);
-		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).size());
+		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
 		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
-	String out = "Team: "+ teamnumber[1] +"\n Matches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).size()
+	String out = "Team: "+ teamnumber[1] +"\n Matches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size()
+			+"\n Offensive Power Rating:\n"+GameData.matchdata.get("frc"+teamnumber[1]).OPR
+			+"\n Defensive Power Rating:\n"+GameData.matchdata.get("frc"+teamnumber[1]).DPR
+			+"\n Calculated Contribution to Winning Margin:\n"+GameData.matchdata.get("frc"+teamnumber[1]).CCWM
 			+"\n Predicted Abilities:"
 			+ "\n Rocket Hatch Low:  "+evaluate(data.getDouble(0))+" "+ round(data.getDouble(0),3)
 			+ "\n Rocket Hatch Mid:  "+evaluate(data.getDouble(1))+" "+ round(data.getDouble(1),3)
@@ -233,7 +257,7 @@ public static String stats(String[] teamnumber) {
 		}else {
 			return "Not enough matches played"
 					+ "\nMatches needed: 5"
-					+ "\nMatches played: "+GameData.matchdata.get("frc"+teamnumber[1]).size();
+					+ "\nMatches played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size();
 		}
 		}catch(Exception e) {
 			return "Team "+teamnumber[1]+" is not at this competition";

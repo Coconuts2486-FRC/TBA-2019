@@ -19,6 +19,7 @@ import com.google.gson.JsonSyntaxException;
 import Data.ExampleStructure;
 import Data.GameData;
 import Data.GameDataStructure;
+import Data.match;
 import Internet.HTTP;
 import JSONing.JSONGenerators;
 import JSONing.JSON_Parsing;
@@ -37,16 +38,15 @@ public class DataTransformer {
 		}
 		
 	}
-	public static HashMap<String,ArrayList<GameDataStructure>> setMatchData(Object[] keys) throws JsonSyntaxException, Exception {
-		HashMap<String,ArrayList<GameDataStructure>> AllOut = new HashMap<String,ArrayList<GameDataStructure>>();
-		for(int i = 0;i<keys.length;i++) {
-			ArrayList<GameDataStructure> output = new ArrayList<GameDataStructure>();
+	public static HashMap<String, GameDataStructure> setMatchData(Object[] keys) throws JsonSyntaxException, Exception {
+		HashMap<String,GameDataStructure> AllOut = new HashMap<String,GameDataStructure>();
+		for(int i = 0;i<GameData.teamkeys.size();i++) {
+			GameDataStructure GD = new GameDataStructure();
 			JsonParser jsonParser = new JsonParser();
-			JsonArray jArray = jsonParser.parse(HTTP.matches(keys[i].toString())).getAsJsonArray();
-			
+			JsonArray jArray = jsonParser.parse(HTTP.matches(GameData.teamkeys.get(i))).getAsJsonArray();
 			for(int ie = 0;ie<jArray.size();ie++) {
+				match GDS = new match();
 				try {
-				GameDataStructure GDS = new GameDataStructure();
 				JsonObject jObject = jArray.get(ie).getAsJsonObject();
 				JsonObject baseblue = jObject.get("alliances").getAsJsonObject().get("blue").getAsJsonObject();
 				JsonObject baseRed = jObject.get("alliances").getAsJsonObject().get("red").getAsJsonObject();
@@ -54,10 +54,10 @@ public class DataTransformer {
 				String preListRed = baseRed.get("team_keys").getAsJsonArray().toString().replace("[", "").replace("]", "").replace("\"", "");
 				ArrayList<String> listblue = new ArrayList<String>(Arrays.asList(preListblue.split(",")));
 				ArrayList<String> listRed = new ArrayList<String>(Arrays.asList(preListRed.split(",")));
-				if(listblue.contains(keys[i].toString())) {
+				if(listblue.contains(GameData.teamkeys.get(i))) {
 					GDS.alliance="blue";
 				}
-				if(listRed.contains(keys[i].toString())) {
+				if(listRed.contains(GameData.teamkeys.get(i))) {
 					GDS.alliance="red";
 				}
 				//Setting Specific Data
@@ -172,12 +172,12 @@ public class DataTransformer {
 				GDS.redData.preMatchLevelRobot2=red.get("preMatchLevelRobot2").getAsString();
 				GDS.redData.preMatchLevelRobot3=red.get("preMatchLevelRobot3").getAsString();
 				
-				output.add(GDS);
+				GD.matches.add(GDS);
 				}catch(Exception e) {
 				}
 			}
 		
-			AllOut.put(keys[i].toString(), output);
+			AllOut.put(keys[i].toString(), GD);
 		}
 		return AllOut;
 	}
@@ -187,56 +187,56 @@ public class DataTransformer {
 		Object[] keys = classifiers.keySet().toArray();
 		JSON_Parsing.WriteToFile(new GsonBuilder().setPrettyPrinting().create().toJson(keys), "/Users/logan42474/Desktop/2019 DeepNetwork Training data stuff.txt");
 		try {
-			HashMap<String,ArrayList<GameDataStructure>> trainingGameData = setMatchData(keys);
+			HashMap<String,GameDataStructure> trainingGameData = setMatchData(keys);
 		for(int i = 0;i<classifiers.size();i++) {
 			//trainingGameData.put(key, value)
-			if(trainingGameData.get(keys[i]).size()>4) {
-				for(int z = 0;z<trainingGameData.get(keys[i]).size()-4;z++) {
+			if(trainingGameData.get(keys[i]).matches.size()>4) {
+				for(int z = 0;z<trainingGameData.get(keys[i]).matches.size()-4;z++) {
 					ExampleStructure es = new ExampleStructure();
 				for(int ie = z; ie<5+z;ie++) {
-					if(trainingGameData.get(keys[i]).get(ie).alliance.equals("blue")) {
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay1));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay2));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay3));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay4));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay5));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay6));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay7));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.bay8));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.lowLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.lowLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.lowRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.lowRightRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.midLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.midLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.midRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.midRightRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.topLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.topLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.topRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).blueData.topRightRocketNear));
+					if(trainingGameData.get(keys[i]).matches.get(ie).alliance.equals("blue")) {
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay1));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay2));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay3));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay4));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay5));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay6));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay7));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.bay8));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.lowLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.lowLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.lowRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.lowRightRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.midLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.midLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.midRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.midRightRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.topLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.topLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.topRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).blueData.topRightRocketNear));
 						
 					}else {
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay1));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay2));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay3));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay4));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay5));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay6));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay7));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.bay8));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.lowLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.lowLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.lowRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.lowRightRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.midLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.midLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.midRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.midRightRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.topLeftRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.topLeftRocketNear));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.topRightRocketFar));
-						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).get(ie).redData.topRightRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay1));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay2));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay3));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay4));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay5));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay6));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay7));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.bay8));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.lowLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.lowLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.lowRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.lowRightRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.midLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.midLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.midRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.midRightRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.topLeftRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.topLeftRocketNear));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.topRightRocketFar));
+						es.inputs.add(LabelToDouble(trainingGameData.get(keys[i]).matches.get(ie).redData.topRightRocketNear));
 					}
 				}
 				for(int iee = 0; iee<8;iee++) {

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -11,6 +12,9 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.stats.StatsListener;
+import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -39,51 +43,51 @@ public static void loadModel(String filepath) throws IOException {
 public static INDArray calculate(String teamkey){
 	INDArray in = Nd4j.zeros(1, 100);
 	ArrayList<Double> inputs = new ArrayList<Double>();
-	int len = GameData.matchdata.get(teamkey).size();
+	int len = GameData.matchdata.get(teamkey).matches.size();
 	for(int ie = len-5; ie<len;ie++) {
-		if(GameData.matchdata.get(teamkey).get(ie).alliance.equals("blue")) {
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay1));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay2));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay3));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay4));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay5));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay6));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay7));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.bay8));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.lowRightRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.midRightRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).blueData.topRightRocketNear));
+		if(GameData.matchdata.get(teamkey).matches.get(ie).alliance.equals("blue")) {
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay1));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay2));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay3));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay4));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay5));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay6));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay7));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.bay8));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.lowLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.lowLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.lowRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.lowRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.midLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.midLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.midRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.midRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.topLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.topLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.topRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).blueData.topRightRocketNear));
 			
 		}else {
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay1));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay2));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay3));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay4));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay5));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay6));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay7));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.bay8));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.lowRightRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.midRightRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topLeftRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topLeftRocketNear));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topRightRocketFar));
-			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).get(ie).redData.topRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay1));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay2));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay3));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay4));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay5));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay6));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay7));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.bay8));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.lowLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.lowLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.lowRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.lowRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.midLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.midLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.midRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.midRightRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.topLeftRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.topLeftRocketNear));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.topRightRocketFar));
+			inputs.add(DataTransformer.LabelToDouble(GameData.matchdata.get(teamkey).matches.get(ie).redData.topRightRocketNear));
 		}
 	}
 	for(int i = 0;i<100;i++) {
@@ -93,7 +97,10 @@ public static INDArray calculate(String teamkey){
 }
 public static void Train(int trainingItterations, Double minimalError, String filePath, boolean hasHeader) throws FileNotFoundException {
 	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, hasHeader);
-	net.setListeners(new ScoreIterationListener(1000));
+	UIServer uiServer = UIServer.getInstance();
+	StatsStorage statsStorage = new InMemoryStatsStorage();
+	uiServer.attach(statsStorage);
+	net.setListeners(new StatsListener(statsStorage));
 	if(minimalError==null) {
 		for(int i = 0; i<trainingItterations; i++) {
 			net.fit(ds);
