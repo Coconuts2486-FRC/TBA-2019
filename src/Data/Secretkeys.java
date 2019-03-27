@@ -21,9 +21,10 @@ public class Secretkeys {
 	public static void startup() throws FileNotFoundException {
 		File keys = new File(basedir+"keys.txt");
 		if(keys.exists()) {
+			System.out.println("Keys Exist!");
 			loadkeys();
 		} else {
-			JOptionPane.showMessageDialog(null, "Keys do not exist");
+			System.out.println("Keys Do Not Exist");
 		}
 	}
 	

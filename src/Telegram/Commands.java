@@ -39,36 +39,42 @@ public static String main(Update input){
 		return output;
 }
 public static String update(Update input) {
-	MyAmazingBot MAB = new MyAmazingBot();
-	switch(GameData.event) {
-	case "azfl": MAB.errorMessage(input, "Updating Arizona North");
-	break;
-	case "cave": MAB.errorMessage(input, "Updating Ventura");
-	break;
-	case "caoc": MAB.errorMessage(input, "Updating Orange County");
-	break;
-	default: MAB.errorMessage(input, "Updating "+GameData.event);
-	}
-	try {
-		GameData.setMatchData();
-	} catch (JsonSyntaxException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	try {
-		JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
-		File csfile = new File(basedir+"Match Data.csv");
-		csfile.delete();
-		CSVWriter cs = new CSVWriter();
-		cs.WriteGameData(basedir+"Match Data.csv");
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return "Database Updated!";
+	Thread thread = new Thread() {
+		public void run() {
+			MyAmazingBot MAB = new MyAmazingBot();
+			switch(GameData.event) {
+			case "azfl": MAB.errorMessage(input, "Updating Arizona North");
+			break;
+			case "cave": MAB.errorMessage(input, "Updating Ventura");
+			break;
+			case "caoc": MAB.errorMessage(input, "Updating Orange County");
+			break;
+			default: MAB.errorMessage(input, "Updating "+GameData.event);
+			}
+			try {
+				GameData.setMatchData();
+			} catch (JsonSyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
+				File csfile = new File(basedir+"Match Data.csv");
+				csfile.delete();
+				CSVWriter cs = new CSVWriter();
+				cs.WriteGameData(basedir+"Match Data.csv");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MAB.errorMessage(input, "Database Updated!");
+		}
+	};
+	thread.start();
+	return "Updating Database...";
 	
 }
 private static String[] format(Update input) {
@@ -81,59 +87,69 @@ private static String[] format(Update input) {
 	}
 }
 public static String startup(Update input) {
+	Thread thread = new Thread("Startup Thread") {
+		public void run() {
+			MyAmazingBot MAB = new MyAmazingBot();
+			try {
+				GameData.uploadEventKey(basedir+"Event Key.txt");
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			switch(GameData.event) {
+			case "azfl": MAB.errorMessage(input, "Starting up Arizona North");
+			break;
+			case "cave": MAB.errorMessage(input, "Starting up Ventura");
+			break;
+			case "caoc": MAB.errorMessage(input, "Starting up Orange County");
+			break;
+			default: MAB.errorMessage(input, "Starting up "+GameData.event);
+			}
+			MAB.errorMessage(input, "Uploading Data...");
+			try {
+				GameData.uploadTeamKeys(basedir+"Team Keys.txt");
+				GameData.uploadMatchData(basedir+"Match Data.txt");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			}
+			MAB.errorMessage(input, "Uploading Neural Network...");
+			try {
+				DeepNetworkAbilities.loadModel(basedir+"DeepNetwork.zip");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			}
+			MAB.errorMessage(input, "Startup Complete!");
+		}
+	};
 	if(input.getMessage().getFrom().getId()==796720243) {
-		MyAmazingBot MAB = new MyAmazingBot();
-		MAB.errorMessage(input, "Starting up...");
-		try {
-			GameData.uploadEventKey(basedir+"Event Key.txt");
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		switch(GameData.event) {
-		case "azfl": MAB.errorMessage(input, "Starting up Arizona North");
-		break;
-		case "cave": MAB.errorMessage(input, "Starting up Ventura");
-		break;
-		case "caoc": MAB.errorMessage(input, "Starting up Orange County");
-		break;
-		default: MAB.errorMessage(input, "Starting up "+GameData.event);
-		}
-		MAB.errorMessage(input, "Uploading Data...");
-		try {
-			GameData.uploadTeamKeys(basedir+"Team Keys.txt");
-			GameData.uploadMatchData(basedir+"Match Data.txt");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			MAB.errorMessage(input, e.toString());
-		}
-		MAB.errorMessage(input, "Uploading Neural Network...");
-		try {
-			DeepNetworkAbilities.loadModel(basedir+"DeepNetwork.zip");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			MAB.errorMessage(input, e.toString());
-		}
-		return "Startup Complete!";
+		thread.start();
+		return "Starting up...";
 	}else {
 		return "--- You are not authorized to use this command ---";
 	}
 }
 public static String train(Update input, String[] maxerror) {
+	Thread thread = new Thread() {
+		public void run() {
+			MyAmazingBot MAB = new MyAmazingBot();
+			try {
+				DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[1]), basedir+"Training Data .csv", true);
+				MAB.errorMessage(input, "Deep Learning Network has been trained!");
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			}
+		}
+	};
 	if(maxerror.length>1) {
 	if(input.getMessage().getFrom().getId()==796720243) {
-		MyAmazingBot MAB = new MyAmazingBot();
-		MAB.errorMessage(input, "Starting training...");
-		try {
-			DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[1]), basedir+"Training Data .csv", true);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			MAB.errorMessage(input, e.toString());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			MAB.errorMessage(input, e.toString());
-		}
-		return "Deep Learning Network has been trained!";
+		thread.start();
+		return "Starting training...";
 	}else {
 		return "--- You are not authorized to use this command ---";
 	}
