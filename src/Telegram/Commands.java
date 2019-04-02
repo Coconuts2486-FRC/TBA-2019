@@ -31,6 +31,8 @@ public static String main(Update input){
 		break;
 		case "/train": output=train(input,formatted);
 		break;
+		case "/stoptraining": output=stoplearning(input);
+		break;
 		case "/start": output="To get statistics on teams use the command \n/stats"
 				+ "\nExample: /stats 2486";
 		break;
@@ -76,6 +78,18 @@ public static String update(Update input) {
 	thread.start();
 	return "Updating Database...";
 	
+}
+public static String stoplearning(Update input) {
+	if(input.getMessage().getFrom().getId()==796720243) {
+	if(DeepNetworkAbilities.training) {
+		DeepNetworkAbilities.training=false;
+	return "Training has stopped";
+	}else {
+	return "... It was never being trained...";
+	}
+	}else {
+		return "--- You are not authorized to use this command ---";
+	}
 }
 private static String[] format(Update input) {
 	if(input.getMessage().getText().contains(" ")) {
@@ -135,8 +149,18 @@ public static String train(Update input, String[] maxerror) {
 		public void run() {
 			MyAmazingBot MAB = new MyAmazingBot();
 			try {
+				DeepNetworkAbilities.training=true;
 				DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[1]), basedir+"Training Data .csv", true);
+				DeepNetworkAbilities.training=false;
 				MAB.errorMessage(input, "Deep Learning Network has been trained!");
+				MAB.errorMessage(input, "Saving Network...");
+				try {
+					DeepNetworkAbilities.saveModel(basedir+"DeepNetwork.zip");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				MAB.errorMessage(input, "Done!");
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				MAB.errorMessage(input, e.toString());

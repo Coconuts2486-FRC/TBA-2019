@@ -40,10 +40,11 @@ public class DataTransformer {
 	}
 	public static HashMap<String, GameDataStructure> setMatchData(Object[] keys) throws JsonSyntaxException, Exception {
 		HashMap<String,GameDataStructure> AllOut = new HashMap<String,GameDataStructure>();
-		for(int i = 0;i<GameData.teamkeys.size();i++) {
+		for(int i = 0;i<keys.length;i++) {
+			//System.out.println(Gam);
 			GameDataStructure GD = new GameDataStructure();
 			JsonParser jsonParser = new JsonParser();
-			JsonArray jArray = jsonParser.parse(HTTP.matches(GameData.teamkeys.get(i))).getAsJsonArray();
+			JsonArray jArray = jsonParser.parse(HTTP.matches(keys[i].toString())).getAsJsonArray();
 			for(int ie = 0;ie<jArray.size();ie++) {
 				match GDS = new match();
 				try {
@@ -54,10 +55,10 @@ public class DataTransformer {
 				String preListRed = baseRed.get("team_keys").getAsJsonArray().toString().replace("[", "").replace("]", "").replace("\"", "");
 				ArrayList<String> listblue = new ArrayList<String>(Arrays.asList(preListblue.split(",")));
 				ArrayList<String> listRed = new ArrayList<String>(Arrays.asList(preListRed.split(",")));
-				if(listblue.contains(GameData.teamkeys.get(i))) {
+				if(listblue.contains(keys[i].toString())) {
 					GDS.alliance="blue";
 				}
-				if(listRed.contains(GameData.teamkeys.get(i))) {
+				if(listRed.contains(keys[i].toString())) {
 					GDS.alliance="red";
 				}
 				//Setting Specific Data
@@ -176,7 +177,7 @@ public class DataTransformer {
 				}catch(Exception e) {
 				}
 			}
-		
+			
 			AllOut.put(keys[i].toString(), GD);
 		}
 		return AllOut;
@@ -185,7 +186,7 @@ public class DataTransformer {
 		HashMap<String,ArrayList<Double>> classifiers = CSVtoArrayList(filePath, hasHeader);
 		ArrayList<ExampleStructure> data = new ArrayList<ExampleStructure>();
 		Object[] keys = classifiers.keySet().toArray();
-		JSON_Parsing.WriteToFile(new GsonBuilder().setPrettyPrinting().create().toJson(keys), "/Users/logan42474/Desktop/2019 DeepNetwork Training data stuff.txt");
+		//JSON_Parsing.WriteToFile(new GsonBuilder().setPrettyPrinting().create().toJson(keys), "/Users/logan42474/Desktop/2019 DeepNetwork Training data stuff.txt");
 		try {
 			HashMap<String,GameDataStructure> trainingGameData = setMatchData(keys);
 		for(int i = 0;i<classifiers.size();i++) {

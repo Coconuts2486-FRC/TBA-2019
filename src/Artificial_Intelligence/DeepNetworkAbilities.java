@@ -32,6 +32,7 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer.Builder;
 
 public class DeepNetworkAbilities {
 public static MultiLayerNetwork net;
+public static boolean training = false;
 public static void saveModel(String filepath) throws IOException {
         ModelSerializer.writeModel(net, filepath, true);
 }
@@ -97,17 +98,18 @@ public static INDArray calculate(String teamkey){
 }
 public static void Train(int trainingItterations, Double minimalError, String filePath, boolean hasHeader) throws FileNotFoundException {
 	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, hasHeader);
-	UIServer uiServer = UIServer.getInstance();
-	StatsStorage statsStorage = new InMemoryStatsStorage();
-	uiServer.attach(statsStorage);
-	net.setListeners(new StatsListener(statsStorage));
+	//UIServer uiServer = UIServer.getInstance();
+	//StatsStorage statsStorage = new InMemoryStatsStorage();
+	//uiServer.attach(statsStorage);
+	//net.setListeners(new StatsListener(statsStorage));
+	net.setListeners(new ScoreIterationListener(100));
 	if(minimalError==null) {
 		for(int i = 0; i<trainingItterations; i++) {
 			net.fit(ds);
 		}
 	}else{
 		net.fit(ds);
-		while(net.score()>minimalError) {
+		while(net.score()>minimalError&&training) {
 			net.fit(ds);
 		}
 	}
