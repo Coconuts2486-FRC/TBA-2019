@@ -10,6 +10,10 @@ public static String getAllMatchData() throws Exception {
 	String gson = new GsonBuilder().setPrettyPrinting().create().toJson(GameData.matchdata);
 	return gson;
 }
+public static String getAllPhotoIDs() throws Exception {
+	String gson = new GsonBuilder().setPrettyPrinting().create().toJson(GameData.photoIDs);
+	return gson;
+}
 public static String getAllTeamKeys() throws Exception {
 	String gson = new GsonBuilder().setPrettyPrinting().create().toJson(GameData.teamkeys);
 	return gson;

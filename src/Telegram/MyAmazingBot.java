@@ -2,7 +2,7 @@ package Telegram;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -15,22 +15,31 @@ public class MyAmazingBot extends TelegramLongPollingBot {
     			 SendMessage message = new SendMessage().setChatId(update.getMessage().getChatId())
     					 .setText(Commands.main(update));
     			 try {
-    		            execute(message); // Call method to send the message
+    		            execute(message);
     		        } catch (TelegramApiException e) {
     		            e.printStackTrace();
     		        }
     		 }
+    	 if(update.getMessage().hasPhoto()) {
+    		 PhotoCommands.process(update);
     	    }
+    }
     public void errorMessage(Update data, String text) {
-    	 SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-	                .setChatId(data.getMessage().getChatId())
-	                .setText(text);
+    	 	SendMessage message = new SendMessage().setChatId(data.getMessage().getChatId()).setText(text);
 	        try {
-	           execute(message); // Call method to send the message
+	           execute(message);
 	        } catch (TelegramApiException e) {
 	            e.printStackTrace();
 	        }
     }
+    public void sendPhoto(Update data, String photoid) {
+    	SendPhoto photo = new SendPhoto().setChatId(data.getMessage().getChatId()).setPhoto(photoid);
+		 try {
+	            execute(photo);
+	        } catch (TelegramApiException e) {
+	            e.printStackTrace();
+	        }
+   }
 
     public String getBotUsername() {
         // TODO

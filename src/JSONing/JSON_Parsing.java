@@ -24,6 +24,11 @@ public static ArrayList<String> teamkeys(String input) {
     Gson out = new Gson();
     return out.fromJson(input, token);
 }
+public static HashMap<String, String> photoIDs(String input) {
+	Type token = new TypeToken<HashMap<String, String>>(){}.getType(); 
+    Gson out = new Gson();
+    return out.fromJson(input, token);
+}
 
 public static void WriteToFile(String data, String location) {
     File file = new File(location);

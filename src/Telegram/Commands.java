@@ -21,7 +21,7 @@ public static String main(Update input){
 	String[] formatted = format(input);
 		String output = null;
 		switch(formatted[0].toLowerCase()) {
-		case "/stats": output=stats(formatted);
+		case "/stats": output=stats(input, formatted);
 		break;
 		case "/boot": output=boot(input,formatted);
 		break;
@@ -267,7 +267,8 @@ public static String boot(Update input, String[] tours){
 				+ "\nExample: /boot flagstaff";
 	}
 }
-public static String stats(String[] teamnumber) {
+public static String stats(Update update, String[] teamnumber) {
+	MyAmazingBot MAB = new MyAmazingBot();
 	if(teamnumber.length>1) {
 		try {
 		if(GameData.matchdata.get("frc"+teamnumber[1]).matches.size()>4) {
@@ -288,6 +289,7 @@ public static String stats(String[] teamnumber) {
 			+ "\n Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
 			+ "\n CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
 			+ "\n CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
+	MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
 	return out;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data."

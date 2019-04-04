@@ -21,6 +21,7 @@ import JSONing.JSON_Parsing;
 public class GameData {
 	public static String year = "2019";
 	public static String event = "azfl";
+	public static HashMap<String, String> photoIDs = new HashMap<String, String>();
 	public static ArrayList<String> teamkeys = new ArrayList<String>();
 	public static HashMap<String,GameDataStructure> matchdata = new HashMap<String,GameDataStructure>();
 	public static void uploadEventKey(String filePath) throws FileNotFoundException {
@@ -52,6 +53,21 @@ public class GameData {
         }.getType();
         Gson gson = new Gson();
         GameData.matchdata = gson.fromJson(data, token);
+	}
+	public static void uploadPhotoIDs(String filePath) throws FileNotFoundException {
+		File file = new File(filePath); 
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(file); 
+		String data = "";
+		
+		while(sc.hasNextLine()) {
+			data+= sc.nextLine();
+		}
+        Type token = new TypeToken<HashMap<String, String>>(){
+            private static final long serialVersionUID = 3909772501481775418L;
+        }.getType();
+        Gson gson = new Gson();
+        GameData.photoIDs = gson.fromJson(data, token);
 	}
 	public static void uploadTeamKeys(String filePath) throws FileNotFoundException {
 		File file = new File(filePath); 

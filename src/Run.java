@@ -4,6 +4,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import Data.GameData;
 import Data.Secretkeys;
 import Telegram.MyAmazingBot;
 
@@ -22,7 +23,10 @@ public class Run {
 			System.out.println("Creating Base Directory");
 			baseFile.mkdir();
 		}
-		
+		File ids = new File( basedir+"PhotoIDs.txt");
+		if(ids.exists()) {
+			GameData.uploadPhotoIDs( basedir+"PhotoIDs.txt");
+		}
 		Secretkeys.startup();
 		
 		System.out.println("Starting Telegram Server!");
