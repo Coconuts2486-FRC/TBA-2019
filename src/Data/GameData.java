@@ -86,10 +86,14 @@ public class GameData {
 	}
 	public static void setMatchData() throws JsonSyntaxException, Exception {
 		HashMap<String, OPRs> oprs = JSON_Parsing.OPRsToHashMap();
+		JsonParser jsonParser = new JsonParser();
+		JsonObject rankingArray = jsonParser.parse(HTTP.getRanking()).getAsJsonObject();
 		for(int i = 0;i<GameData.teamkeys.size();i++) {
 			GameDataStructure GD = new GameDataStructure();
-			JsonParser jsonParser = new JsonParser();
+			JsonObject teamData = jsonParser.parse(HTTP.getTeamName(GameData.teamkeys.get(i))).getAsJsonObject();
+			GD.teamName= teamData.get("nickname").getAsString();
 			JsonArray jArray = jsonParser.parse(HTTP.matches(GameData.teamkeys.get(i))).getAsJsonArray();
+			GD.ranking= rankingArray.get(GameData.teamkeys.get(i)).getAsJsonObject().get("qual").getAsJsonObject().get("ranking").getAsJsonObject().get("rank").getAsInt();
 			for(int ie = 0;ie<jArray.size();ie++) {
 				match GDS = new match();
 				try {

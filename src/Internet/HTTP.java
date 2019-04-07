@@ -5,13 +5,10 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import Data.GameData;
 import Data.Secretkeys;
-import jdk.nashorn.internal.parser.JSONParser;
 
 public class HTTP {
 
@@ -36,6 +33,12 @@ public class HTTP {
     }
 	public static String getTeamOPRs(String eventkey) throws Exception {	
 		return (APIRead("event/"+eventkey+"/oprs"));
+	}
+	public static String getTeamName(String teamkey) throws Exception {
+		return APIRead("team/"+teamkey+"/simple");
+	}
+	public static String getRanking() throws Exception {
+		return APIRead("event/"+GameData.year+GameData.event+"/teams/statuses");
 	}
 	public static ArrayList<String> getTeamKeys(String eventkey) throws Exception {
 		Type token = new TypeToken<ArrayList<String>>(){}.getType(); 

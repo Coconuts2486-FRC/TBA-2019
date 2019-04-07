@@ -276,20 +276,23 @@ public static String stats(Update update, String[] teamnumber) {
 		System.out.println(teamnumber[1]);
 		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
 		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
-	String out = "Team: "+ teamnumber[1] +"\n Matches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size()
-			+"\n Offensive Power Rating:\n"+GameData.matchdata.get("frc"+teamnumber[1]).OPR
-			+"\n Defensive Power Rating:\n"+GameData.matchdata.get("frc"+teamnumber[1]).DPR
-			+"\n Calculated Contribution to Winning Margin:\n"+GameData.matchdata.get("frc"+teamnumber[1]).CCWM
+		if(GameData.photoIDs.containsKey("frc"+teamnumber[1])) {
+		MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
+		}
+		MAB.errorMessage(update, "Team: "+ teamnumber[1] +"\nName: "+GameData.matchdata.get("frc"+teamnumber[1]).teamName+"\nRank: "+GameData.matchdata.get("frc"+teamnumber[1]).ranking+"\nMatches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
+	String out = 
+			"\n Offensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).OPR
+			+"\n Defensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).DPR
+			+"\n Calculated Contribution to Winning Margin:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).CCWM
 			+"\n Predicted Abilities:"
-			+ "\n Rocket Hatch Low:  "+evaluate(data.getDouble(0))+" "+ round(data.getDouble(0),3)
-			+ "\n Rocket Hatch Mid:  "+evaluate(data.getDouble(1))+" "+ round(data.getDouble(1),3)
-			+ "\n Rocket Hatch High: "+evaluate(data.getDouble(2))+" "+ round(data.getDouble(2),3)
-			+ "\n Rocket Cargo Low:  "+evaluate(data.getDouble(3))+" "+ round(data.getDouble(3),3)
-			+ "\n Rocket Cargo Mid:  "+evaluate(data.getDouble(4))+" "+ round(data.getDouble(4),3)
-			+ "\n Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
-			+ "\n CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
-			+ "\n CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
-	MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
+			+ "\n    Rocket Hatch Low:  "+evaluate(data.getDouble(0))+" "+ round(data.getDouble(0),3)
+			+ "\n    Rocket Hatch Mid:  "+evaluate(data.getDouble(1))+" "+ round(data.getDouble(1),3)
+			+ "\n    Rocket Hatch High: "+evaluate(data.getDouble(2))+" "+ round(data.getDouble(2),3)
+			+ "\n    Rocket Cargo Low:  "+evaluate(data.getDouble(3))+" "+ round(data.getDouble(3),3)
+			+ "\n    Rocket Cargo Mid:  "+evaluate(data.getDouble(4))+" "+ round(data.getDouble(4),3)
+			+ "\n    Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
+			+ "\n    CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
+			+ "\n    CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
 	return out;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data."
