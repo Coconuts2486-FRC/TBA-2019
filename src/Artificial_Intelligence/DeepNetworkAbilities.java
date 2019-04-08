@@ -98,10 +98,6 @@ public static INDArray calculate(String teamkey){
 }
 public static void Train(int trainingItterations, Double minimalError, String filePath, boolean hasHeader) throws FileNotFoundException {
 	DataSet ds = DataTransformer.ArrayListToDataSet(filePath, hasHeader);
-	//UIServer uiServer = UIServer.getInstance();
-	//StatsStorage statsStorage = new InMemoryStatsStorage();
-	//uiServer.attach(statsStorage);
-	//net.setListeners(new StatsListener(statsStorage));
 	net.setListeners(new ScoreIterationListener(100));
 	if(minimalError==null) {
 		for(int i = 0; i<trainingItterations; i++) {
@@ -116,7 +112,7 @@ public static void Train(int trainingItterations, Double minimalError, String fi
 }
 public static void GenerateClassificationNet(int numberOfInputs, int numberOfOutputs, int numberOfHiddenNodes, int numberOfHiddenLayers) {
 	NeuralNetConfiguration.Builder builder = new NeuralNetConfiguration.Builder();
-	builder.updater(new Sgd(0.1));
+	builder.updater(new Nesterovs(0.1));
 	builder.seed(2486);
 	
 	 ListBuilder listBuilder = builder.list();
