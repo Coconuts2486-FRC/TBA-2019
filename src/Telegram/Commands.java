@@ -8,6 +8,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import com.google.gson.JsonSyntaxException;
 import Artificial_Intelligence.DeepNetworkAbilities;
+import Artificial_Intelligence.DeepNetworkAverage;
 import CSV.CSVWriter;
 import Data.GameData;
 import Internet.HTTP;
@@ -17,15 +18,12 @@ import JSONing.JSON_Parsing;
 public class Commands {
 	static String basedir = System.getProperty("user.home")+"/Desktop/FRC 2019 Data/";
 public static String main(Update input){
-	System.out.println(input.getMessage().getFrom().getUserName()+": "+input.getMessage().getFrom().getId()+": "+input.getMessage().getText());
 	String[] formatted = format(input);
 		String output = null;
 		switch(formatted[0].toLowerCase()) {
 		case "/stats": output=stats(input, formatted);
 		break;
 		case "/boot": output=boot(input,formatted);
-		break;
-		case "/startup": output=startup(input);
 		break;
 		case "/update": output=update(input);
 		break;
@@ -81,8 +79,9 @@ public static String update(Update input) {
 }
 public static String stoplearning(Update input) {
 	if(input.getMessage().getFrom().getId()==796720243) {
-	if(DeepNetworkAbilities.training) {
+	if(DeepNetworkAbilities.training||DeepNetworkAverage.training) {
 		DeepNetworkAbilities.training=false;
+		DeepNetworkAverage.training=false;
 	return "Training has stopped";
 	}else {
 	return "... It was never being trained...";
@@ -100,57 +99,13 @@ private static String[] format(Update input) {
 		return output;
 	}
 }
-public static String startup(Update input) {
-	Thread thread = new Thread("Startup Thread") {
-		public void run() {
-			MyAmazingBot MAB = new MyAmazingBot();
-			try {
-				GameData.uploadEventKey(basedir+"Event Key.txt");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			switch(GameData.event) {
-			case "azfl": MAB.errorMessage(input, "Starting up Arizona North");
-			break;
-			case "cave": MAB.errorMessage(input, "Starting up Ventura");
-			break;
-			case "caoc": MAB.errorMessage(input, "Starting up Orange County");
-			break;
-			default: MAB.errorMessage(input, "Starting up "+GameData.event);
-			}
-			MAB.errorMessage(input, "Uploading Data...");
-			try {
-				GameData.uploadTeamKeys(basedir+"Team Keys.txt");
-				GameData.uploadMatchData(basedir+"Match Data.txt");
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				MAB.errorMessage(input, e.toString());
-			}
-			MAB.errorMessage(input, "Uploading Neural Network...");
-			try {
-				DeepNetworkAbilities.loadModel(basedir+"DeepNetwork.zip");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				MAB.errorMessage(input, e.toString());
-			}
-			MAB.errorMessage(input, "Startup Complete!");
-		}
-	};
-	if(input.getMessage().getFrom().getId()==796720243) {
-		thread.start();
-		return "Starting up...";
-	}else {
-		return "--- You are not authorized to use this command ---";
-	}
-}
 public static String train(Update input, String[] maxerror) {
 	Thread thread = new Thread() {
 		public void run() {
 			MyAmazingBot MAB = new MyAmazingBot();
 			try {
 				DeepNetworkAbilities.training=true;
-				DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[1]), basedir+"Training Data .csv", true);
+				DeepNetworkAbilities.Train(0, Double.parseDouble(maxerror[2]), basedir+"Training Data .csv", true);
 				DeepNetworkAbilities.training=false;
 				MAB.errorMessage(input, "Deep Learning Network has been trained!");
 				MAB.errorMessage(input, "Saving Network...");
@@ -170,16 +125,50 @@ public static String train(Update input, String[] maxerror) {
 			}
 		}
 	};
-	if(maxerror.length>1) {
+	Thread threadb = new Thread() {
+		public void run() {
+			MyAmazingBot MAB = new MyAmazingBot();
+			try {
+				DeepNetworkAverage.training=true;
+				DeepNetworkAverage.Train(0, Double.parseDouble(maxerror[2]), basedir+"Training Data b.csv", true);
+				DeepNetworkAverage.training=false;
+				MAB.errorMessage(input, "Deep Learning Network has been trained!");
+				MAB.errorMessage(input, "Saving Network...");
+				try {
+					DeepNetworkAbilities.saveModel(basedir+"DeepNetworkb.zip");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				MAB.errorMessage(input, "Done!");
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				MAB.errorMessage(input, e.toString());
+			}
+		}
+	};
+	if(maxerror.length>2) {
 	if(input.getMessage().getFrom().getId()==796720243) {
-		thread.start();
-		return "Starting training...";
+		if(maxerror[1].toLowerCase().equals("a")) {
+			thread.start();
+			return "Starting training...";
+		}else if(maxerror[1].toLowerCase().equals("b")) {
+			threadb.start();
+			return "Starting training...";
+		}else {
+			return "There are two Neural Networks"
+					+ "\nA: The Abilities Network"
+					+ "\nB: The Average Network";
+		}
 	}else {
 		return "--- You are not authorized to use this command ---";
 	}
 	}else {
-		return "Enter a Maximum Error."
-				+ "\nExample: /train 0.1";
+		return "Choose the network and Maximum error."
+				+ "\nExample: /train a 0.1";
 	}
 	
 }
@@ -258,6 +247,25 @@ public static String boot(Update input, String[] tours){
 				e1.printStackTrace();
 			}
 		}
+		File fileb = new File(basedir+"DeepNetworkb.zip");
+		if(!fileb.exists()) {
+			try {
+				MAB.errorMessage(input, "Building Neural Network...");
+				DeepNetworkAverage.GenerateAverageNet(100, 8, 100, 3);
+				DeepNetworkAbilities.saveModel(basedir+"DeepNetworkb.zip");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else {
+			MAB.errorMessage(input, "Loading Neural Network...");
+			try {
+				DeepNetworkAverage.loadModel(basedir+"DeepNetworkb.zip");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		return "Bootup Complete!";
 	}else {
 		return "--- You are not authorized to use this command ---";
@@ -273,14 +281,13 @@ public static String stats(Update update, String[] teamnumber) {
 		try {
 		if(GameData.matchdata.get("frc"+teamnumber[1]).matches.size()>4) {
 	try {
-		System.out.println(teamnumber[1]);
-		System.out.println(GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
 		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
+		INDArray datab = DeepNetworkAverage.calculate("frc"+teamnumber[1]);
 		if(GameData.photoIDs.containsKey("frc"+teamnumber[1])) {
 		MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
 		}
 		MAB.errorMessage(update, "Team: "+ teamnumber[1] +"\nName: "+GameData.matchdata.get("frc"+teamnumber[1]).teamName+"\nRank: "+GameData.matchdata.get("frc"+teamnumber[1]).ranking+"\nMatches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
-	String out = 
+		String out = 
 			"\n Offensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).OPR
 			+"\n Defensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).DPR
 			+"\n Calculated Contribution to Winning Margin:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).CCWM
@@ -293,7 +300,18 @@ public static String stats(Update update, String[] teamnumber) {
 			+ "\n    Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
 			+ "\n    CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
 			+ "\n    CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
-	return out;
+			MAB.errorMessage(update, out);
+			String outb = 
+			" Predicted Averages:"
+			+ "\n    Rocket Hatch Low:  "+ round(datab.getDouble(0),4)
+			+ "\n    Rocket Hatch Mid:  "+ round(datab.getDouble(1),4)
+			+ "\n    Rocket Hatch High: "+ round(datab.getDouble(2),4)
+			+ "\n    Rocket Cargo Low:  "+ round(datab.getDouble(3),4)
+			+ "\n    Rocket Cargo Mid:  "+ round(datab.getDouble(4),4)
+			+ "\n    Rocket Cargo High: "+ round(datab.getDouble(5),4)
+			+ "\n    CargoShip Hatches: "+ round(datab.getDouble(6),4)
+			+ "\n    CargoShip Cargo:   "+ round(datab.getDouble(7),4);
+	return outb;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data."
 				+ " There is a possibility that the database has not been booted up yet."
