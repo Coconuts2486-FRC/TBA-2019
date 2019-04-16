@@ -47,7 +47,6 @@ public static HashMap<String, OPRs> OPRsToHashMap() throws Exception {
 	JsonObject jObject = jsonParser.parse(data).getAsJsonObject();
 	HashMap<String, OPRs> outro = new HashMap<String, OPRs>();
 	for(int i=0;i<GameData.teamkeys.size();i++) {
-		System.out.println(i);
 		try {
 		OPRs stat = new OPRs();
 		stat.OPR=jObject.get("oprs").getAsJsonObject().get(GameData.teamkeys.get(i)).getAsDouble();
@@ -55,7 +54,6 @@ public static HashMap<String, OPRs> OPRsToHashMap() throws Exception {
 		stat.CCWM=jObject.get("ccwms").getAsJsonObject().get(GameData.teamkeys.get(i)).getAsDouble();
 		outro.put(GameData.teamkeys.get(i), stat);
 		}catch(Exception e) {
-			System.out.println(GameData.teamkeys.get(i));
 		}
 	}
 	return outro;

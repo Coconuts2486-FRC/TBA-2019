@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import Artificial_Intelligence.DeepNetworkAbilities;
 import Artificial_Intelligence.DeepNetworkAverage;
 import CSV.CSVWriter;
+import Data.Formulas;
 import Data.GameData;
 import Internet.HTTP;
 import JSONing.JSONGenerators;
@@ -18,9 +19,12 @@ import JSONing.JSON_Parsing;
 public class Commands {
 	static String basedir = System.getProperty("user.home")+"/Desktop/FRC 2019 Data/";
 public static String main(Update input){
+	System.out.println(input.getMessage().getFrom().getUserName()+": "+input.getMessage().getFrom().getId()+": "+input.getMessage().getText());
 	String[] formatted = format(input);
 		String output = null;
 		switch(formatted[0].toLowerCase()) {
+		case "/statsadv": output=statsadv(input, formatted);
+		break;
 		case "/stats": output=stats(input, formatted);
 		break;
 		case "/boot": output=boot(input,formatted);
@@ -37,6 +41,63 @@ public static String main(Update input){
 		default:  output="Error 404: Command Not Found";
 		}
 		return output;
+}
+public static String statsadv(Update update, String[] teamnumber) {
+	MyAmazingBot MAB = new MyAmazingBot();
+	if(teamnumber.length>1) {
+		try {
+		if(GameData.matchdata.get("frc"+teamnumber[1]).matches.size()>4) {
+	try {
+		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
+		INDArray datab = DeepNetworkAverage.calculate("frc"+teamnumber[1]);
+		if(GameData.photoIDs.containsKey("frc"+teamnumber[1])) {
+		MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
+		}
+		MAB.errorMessage(update, "Team: "+ teamnumber[1] +"\nName: "+GameData.matchdata.get("frc"+teamnumber[1]).teamName+"\nRank: "+GameData.matchdata.get("frc"+teamnumber[1]).ranking+"\nMatches Played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size());
+		String out = 
+			"\n Offensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).OPR
+			+"\n Defensive Power Rating:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).DPR
+			+"\n Calculated Contribution to Winning Margin:\n    "+GameData.matchdata.get("frc"+teamnumber[1]).CCWM
+			+"\n Predicted Abilities:"
+			+ "\n    Rocket Hatch Low:  "+evaluate(data.getDouble(0))+" "+ round(data.getDouble(0),3)
+			+ "\n    Rocket Hatch Mid:  "+evaluate(data.getDouble(1))+" "+ round(data.getDouble(1),3)
+			+ "\n    Rocket Hatch High: "+evaluate(data.getDouble(2))+" "+ round(data.getDouble(2),3)
+			+ "\n    Rocket Cargo Low:  "+evaluate(data.getDouble(3))+" "+ round(data.getDouble(3),3)
+			+ "\n    Rocket Cargo Mid:  "+evaluate(data.getDouble(4))+" "+ round(data.getDouble(4),3)
+			+ "\n    Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
+			+ "\n    CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
+			+ "\n    CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
+			MAB.errorMessage(update, out);
+			String outb = 
+			" Predicted Averages:"
+			+ "\n    Rocket Hatch Low:  "+ round(datab.getDouble(0),4)
+			+ "\n    Rocket Hatch Mid:  "+ round(datab.getDouble(1),4)
+			+ "\n    Rocket Hatch High: "+ round(datab.getDouble(2),4)
+			+ "\n    Rocket Cargo Low:  "+ round(datab.getDouble(3),4)
+			+ "\n    Rocket Cargo Mid:  "+ round(datab.getDouble(4),4)
+			+ "\n    Rocket Cargo High: "+ round(datab.getDouble(5),4)
+			+ "\n    CargoShip Hatches: "+ round(datab.getDouble(6),4)
+			+ "\n    CargoShip Cargo:   "+ round(datab.getDouble(7),4);
+			MAB.errorMessage(update, outb);
+			MAB.errorMessage(update, Formulas.averageScore("frc"+teamnumber[1]));
+	return Formulas.climbInfo("frc"+teamnumber[1]);
+	}catch(Exception e) {
+		return "There was an error while trying to retreive the data."
+				+ " There is a possibility that the database has not been booted up yet."
+				+ " The error in question is: "+e.toString();
+	}
+		}else {
+			return "Not enough matches played"
+					+ "\nMatches needed: 5"
+					+ "\nMatches played: "+GameData.matchdata.get("frc"+teamnumber[1]).matches.size();
+		}
+		}catch(Exception e) {
+			return "Team "+teamnumber[1]+" is not at this competition";
+		}
+	}else {
+		return "Make sure to enter a team number."
+				+ "\nExample: /stats 2486";
+	}
 }
 public static String update(Update input) {
 	Thread thread = new Thread() {
@@ -282,7 +343,6 @@ public static String stats(Update update, String[] teamnumber) {
 		if(GameData.matchdata.get("frc"+teamnumber[1]).matches.size()>4) {
 	try {
 		INDArray data = DeepNetworkAbilities.calculate("frc"+teamnumber[1]);
-		INDArray datab = DeepNetworkAverage.calculate("frc"+teamnumber[1]);
 		if(GameData.photoIDs.containsKey("frc"+teamnumber[1])) {
 		MAB.sendPhoto(update, GameData.photoIDs.get("frc"+teamnumber[1]));
 		}
@@ -300,18 +360,7 @@ public static String stats(Update update, String[] teamnumber) {
 			+ "\n    Rocket Cargo High: "+evaluate(data.getDouble(5))+" "+ round(data.getDouble(5),3)
 			+ "\n    CargoShip Hatches: "+evaluate(data.getDouble(6))+" "+ round(data.getDouble(6),3)
 			+ "\n    CargoShip Cargo:   "+evaluate(data.getDouble(7))+" "+ round(data.getDouble(7),3);
-			MAB.errorMessage(update, out);
-			String outb = 
-			" Predicted Averages:"
-			+ "\n    Rocket Hatch Low:  "+ round(datab.getDouble(0),4)
-			+ "\n    Rocket Hatch Mid:  "+ round(datab.getDouble(1),4)
-			+ "\n    Rocket Hatch High: "+ round(datab.getDouble(2),4)
-			+ "\n    Rocket Cargo Low:  "+ round(datab.getDouble(3),4)
-			+ "\n    Rocket Cargo Mid:  "+ round(datab.getDouble(4),4)
-			+ "\n    Rocket Cargo High: "+ round(datab.getDouble(5),4)
-			+ "\n    CargoShip Hatches: "+ round(datab.getDouble(6),4)
-			+ "\n    CargoShip Cargo:   "+ round(datab.getDouble(7),4);
-	return outb;
+			return out;
 	}catch(Exception e) {
 		return "There was an error while trying to retreive the data."
 				+ " There is a possibility that the database has not been booted up yet."

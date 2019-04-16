@@ -232,7 +232,6 @@ public class GameData {
 				}
 				GD.matches.add(GDS);
 				}catch(Exception e) {
-					System.out.println(e);
 				}
 			}
 		
