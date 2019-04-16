@@ -20,7 +20,7 @@ import JSONing.JSON_Parsing;
 
 public class GameData {
 	public static String year = "2019";
-	public static String event = "azfl";
+	public static String event = "carv";
 	public static HashMap<String, String> photoIDs = new HashMap<String, String>();
 	public static ArrayList<String> teamkeys = new ArrayList<String>();
 	public static HashMap<String,GameDataStructure> matchdata = new HashMap<String,GameDataStructure>();
@@ -93,7 +93,11 @@ public class GameData {
 			JsonObject teamData = jsonParser.parse(HTTP.getTeamName(GameData.teamkeys.get(i))).getAsJsonObject();
 			GD.teamName= teamData.get("nickname").getAsString();
 			JsonArray jArray = jsonParser.parse(HTTP.matches(GameData.teamkeys.get(i))).getAsJsonArray();
+			try {
 			GD.ranking= rankingArray.get(GameData.teamkeys.get(i)).getAsJsonObject().get("qual").getAsJsonObject().get("ranking").getAsJsonObject().get("rank").getAsInt();
+			}catch(Exception e) {
+				GD.ranking=0;
+			}
 			for(int ie = 0;ie<jArray.size();ie++) {
 				match GDS = new match();
 				try {
@@ -113,7 +117,6 @@ public class GameData {
 				//Setting Specific Data
 				
 				//blue
-				
 				JsonObject blue = jObject.get("score_breakdown").getAsJsonObject().get("blue").getAsJsonObject();
 				
 				GDS.blueData.score=baseblue.get("score").getAsDouble();
@@ -234,7 +237,6 @@ public class GameData {
 				}catch(Exception e) {
 				}
 			}
-		
 			GameData.matchdata.put(GameData.teamkeys.get(i), GD);
 		}
 		//Gson gson = new Gson();

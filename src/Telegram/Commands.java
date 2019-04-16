@@ -106,6 +106,8 @@ public static String update(Update input) {
 			switch(GameData.event) {
 			case "azfl": MAB.errorMessage(input, "Updating Arizona North");
 			break;
+			case "carv": MAB.errorMessage(input, "Updating the Carver Division");
+			break;
 			case "cave": MAB.errorMessage(input, "Updating Ventura");
 			break;
 			case "caoc": MAB.errorMessage(input, "Updating Orange County");
@@ -242,6 +244,10 @@ public static String boot(Update input, String[] tours){
 			GameData.event="azfl";
 			MAB.errorMessage(input, "Tournament set to Arizona North");
 		}
+		if(tour.equals("carver")||tour.equals("carv")||tour.equals("world")||tour.equals("worlds")||tour.equals("champs")||tour.equals("championship")||tour.equals("championships")) {
+			GameData.event="carv";
+			MAB.errorMessage(input, "Tournament set to the Carver Division");
+		}
 		if(tour.equals("ventura")||tour.equals("california")||tour.equals("cali")||tour.equals("cave")) {
 			GameData.event="cave";
 			MAB.errorMessage(input, "Tournament set to Ventura");
@@ -257,15 +263,20 @@ public static String boot(Update input, String[] tours){
 		try {
 			GameData.teamkeys.clear();
 			GameData.teamkeys=(ArrayList<String>) HTTP.getTeamKeys(GameData.year+GameData.event);
+			System.out.println("TEAMKEYS: "+GameData.teamkeys);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			MAB.errorMessage(input, e.toString());
+			System.out.println("I NEED HELP!!!");
 		}
 		try {
+			System.out.println("AAA");
 			GameData.matchdata.clear();
+			System.out.println("BBB");
 			GameData.setMatchData();
+			System.out.println("CCC");
 		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
+			System.out.println("I NEED HELP!!!22222");
 			MAB.errorMessage(input, e.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -273,9 +284,11 @@ public static String boot(Update input, String[] tours){
 		}
 		MAB.errorMessage(input, "Saving Data...");
 		try {
+			System.out.println("DDD");
 			JSON_Parsing.WriteToFile(JSONGenerators.getAllTeamKeys(), basedir+"Team Keys.txt");
 			JSON_Parsing.WriteToFile(JSONGenerators.getAllMatchData(), basedir+"Match Data.txt");
 			JSON_Parsing.WriteToFile(JSONGenerators.getEventKey(), basedir+"Event Key.txt");
+			System.out.println("EEE");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			MAB.errorMessage(input, e.toString());
